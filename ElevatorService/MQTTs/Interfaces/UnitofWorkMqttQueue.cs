@@ -1,0 +1,86 @@
+﻿using Common.Models;
+using Data.Interfaces;
+using Data.Repositorys;
+using ElevatorService.Mappings.Interfaces;
+using JOB.MQTTs.Interfaces;
+using log4net;
+
+namespace ElevatorService.MQTTs.Interfaces
+{
+    public class UnitofWorkMqttQueue : IUnitofWorkMqttQueue
+    {
+        private static readonly ILog MqttServiceLogger = LogManager.GetLogger("MQTT");
+
+        private readonly MqttProcess _mqttProcess;
+        private readonly IUnitOfWorkRepository _repository;
+        private readonly IUnitOfWorkMapping _mapping;
+
+        public UnitofWorkMqttQueue(IMqttWorker mqttWorker, IUnitOfWorkRepository repository, IUnitOfWorkMapping mapping)
+        {
+            _mqttProcess = new MqttProcess(this, mqttWorker, repository, mapping);
+        }
+
+        public void MqttPublishMessage(TopicType topicType, TopicSubType topicSubType, object value)
+        {
+            lock (this)
+            {
+                var getByPublish = ConfigData.PublishTopics.FirstOrDefault(t => t.type == $"{topicType}"
+                                                                            && t.subType == $"{topicSubType}");
+                if (getByPublish == null)
+                {
+                    MqttServiceLogger.Info($"{nameof(MqttPublishMessage)} = ConfigTopic Flie " +
+                                           $" ,type = {topicType} ,subType = {topicSubType}");
+                    return;
+                }
+                else
+                {
+                    string payload = value.ToJson();
+
+                    switch (getByPublish.type)
+                    {
+                        case nameof(TopicType.mission):
+                            QueueStorage.MqttEnqueuePublishMission(new MqttPublishMessageDto
+                            {
+                                Topic = getByPublish.topic,
+                                Payload = payload,
+                                Timestamp = DateTime.Now,
+                            });
+                            _mqttProcess.Mission();
+                            break;
+
+                        case nameof(TopicType.position):
+                            QueueStorage.MqttEnqueuePublishPosition(new MqttPublishMessageDto
+                            {
+                                Topic = getByPublish.topic,
+                                Payload = payload,
+                                Timestamp = DateTime.Now,
+                            });
+                            _mqttProcess.Position();
+                            break;
+                    }
+                }
+            }
+        }
+
+        public void MqttSubscribe(MqttSubscribeMessageDto subscribe)
+        {
+            switch (subscribe.type)
+            {
+                case nameof(TopicType.worker):
+                    QueueStorage.MqttEnqueueSubscribeWorker(subscribe);
+                    break;
+                case nameof(TopicType.elevator):
+                    QueueStorage.MqttEnqueueSubscribeElevator(subscribe);
+                    break;
+
+
+            }
+        }
+
+        public void HandleReceivedMqttMessage()
+        {
+            _mqttProcess.HandleReceivedMqttMessage();
+            _mqttProcess.SubscribeElevator();
+        }
+    }
+}
