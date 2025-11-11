@@ -11,7 +11,7 @@ namespace Data.Interfaces
 
         MapRepository Maps { get; }
         PositionRepository Positions { get; }
-        ElevatorRepository Elevators { get; }
+        DeviceRepository Devices { get; }
 
         #endregion Base
 

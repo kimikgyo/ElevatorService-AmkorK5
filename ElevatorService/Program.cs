@@ -143,7 +143,7 @@ try
     // 등록한 CORS 정책("AllowAll")을 전역으로 적용
     app.UseCors("AllowAll");
     // 2) 미들웨어 파이프라인 구성 ------------------------------------------------
-    app.UseHttpsRedirection();
+    //app.UseHttpsRedirection();
     // 인증/인가가 필요하면 여기 추가
     app.UseAuthentication();
     app.UseAuthorization();

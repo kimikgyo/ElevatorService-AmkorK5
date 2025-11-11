@@ -211,11 +211,11 @@ namespace Data.Repositorys
                 return _commands.FirstOrDefault(m => m.guid == id);
             }
         }
-        public List<Command> GetByRunCommands(List<Command> command)
+        public List<Command> GetByRunCommands(List<Command> commands)
         {
             lock (_lock)
             {
-                return _commands.Where(m => m.state == nameof(CommandState.PENDING) || m.state == nameof(CommandState.EXECUTING) || m.state == nameof(CommandState.COMMANDREQUESTCOMPLETED)).ToList();
+                return commands.Where(m => (m.state == nameof(CommandState.PENDING)) || (m.state == nameof(CommandState.EXECUTING)) || (m.state == nameof(CommandState.COMMANDREQUESTCOMPLETED))).ToList();
             }
         }
     }

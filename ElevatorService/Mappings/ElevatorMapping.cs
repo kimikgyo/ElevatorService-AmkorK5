@@ -6,25 +6,25 @@ namespace ElevatorService.Mappings
 {
     public class ElevatorMapping()
     {
-        public Elevator MqttCreateElevator(MqttSubscribeDtoStatusElevator mqttSubscribeDtoStatusElevator)
+        public Device MqttCreateElevator(MqttSubscribeDtoStatusDevice mqttSubscribeDtoStatusDevice)
         {
-            var model = new Elevator
+            var model = new Device
             {
-              id = mqttSubscribeDtoStatusElevator.id,
-              name = mqttSubscribeDtoStatusElevator.name,
-              mode = mqttSubscribeDtoStatusElevator.mode,
-              state = mqttSubscribeDtoStatusElevator.state,
+              id = mqttSubscribeDtoStatusDevice.id,
+              name = mqttSubscribeDtoStatusDevice.name,
+              mode = mqttSubscribeDtoStatusDevice.mode,
+              state = mqttSubscribeDtoStatusDevice.state,
               createAt = DateTime.Now,
             };
             return model;
         }
 
-        public void MqttUpdate(Elevator elevator,MqttSubscribeDtoStatusElevator mqttSubscribeDtoStatusElevator)
+        public void MqttUpdate(Device elevator, MqttSubscribeDtoStatusDevice mqttSubscribeDtoStatusDevice)
         {
-            elevator.id = mqttSubscribeDtoStatusElevator.id;
-            elevator.name = mqttSubscribeDtoStatusElevator.name;
-            elevator.mode = mqttSubscribeDtoStatusElevator.mode;
-            elevator.state = mqttSubscribeDtoStatusElevator.state;
+            elevator.id = mqttSubscribeDtoStatusDevice.id;
+            elevator.name = mqttSubscribeDtoStatusDevice.name;
+            elevator.mode = mqttSubscribeDtoStatusDevice.mode;
+            elevator.state = mqttSubscribeDtoStatusDevice.state;
             elevator.updateAt = DateTime.Now;
         }
     }

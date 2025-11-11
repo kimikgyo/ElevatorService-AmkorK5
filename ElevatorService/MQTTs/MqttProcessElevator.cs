@@ -30,20 +30,20 @@ namespace ElevatorService.MQTTs
                 {
                     //Console.WriteLine(string.Format("Process Message: [{0}] {1} at {2:yyyy-MM-dd HH:mm:ss,fff}", subscribe.topic, subscribe.Payload, subscribe.Timestamp));
 
-                    var elevator = _repository.Elevators.GetById(subscribe.id);
+                    var elevator = _repository.Devices.GetById(subscribe.id);
                     switch (subscribe.subType)
                     {
                         case nameof(TopicSubType.status):
-                            var status = JsonSerializer.Deserialize<MqttSubscribeDtoStatusElevator>(subscribe.Payload!);
+                            var status = JsonSerializer.Deserialize<MqttSubscribeDtoStatusDevice>(subscribe.Payload!);
                             if (elevator == null)
                             {
                                 var create = _mapping.Elevators.MqttCreateElevator(status);
-                                _repository.Elevators.Add(create);
+                                _repository.Devices.Add(create);
                             }
                             else
                             {
                                 _mapping.Elevators.MqttUpdate(elevator, status);
-                                _repository.Elevators.Update(elevator);
+                                _repository.Devices.Update(elevator);
                             }
 
                             break;

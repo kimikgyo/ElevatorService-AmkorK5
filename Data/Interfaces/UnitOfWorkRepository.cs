@@ -22,7 +22,7 @@ namespace Data.Interfaces
 
         public MapRepository Maps { get; private set; }
         public PositionRepository Positions { get; private set; }
-        public ElevatorRepository Elevators { get; private set; }
+        public DeviceRepository Devices { get; private set; }
 
         #endregion Base
 
@@ -46,7 +46,7 @@ namespace Data.Interfaces
 
             Maps = new MapRepository(connectionString);
             Positions = new PositionRepository(connectionString);
-            Elevators = new ElevatorRepository(connectionString);
+            Devices = new DeviceRepository(connectionString);
 
             #endregion Base
 

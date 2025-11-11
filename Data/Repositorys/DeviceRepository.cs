@@ -4,14 +4,14 @@ using Microsoft.Data.SqlClient;
 
 namespace Data.Repositorys
 {
-    public class ElevatorRepository
+    public class DeviceRepository
     {
-        private static readonly ILog logger = LogManager.GetLogger("Elevator"); //Function 실행관련 Log
+        private static readonly ILog logger = LogManager.GetLogger("Device"); //Function 실행관련 Log
         private readonly string connectionString;
-        private readonly List<Elevator> _elevators = new List<Elevator>(); // cached data
+        private readonly List<Device> _devices = new List<Device>(); // cached data
         private readonly object _lock = new object();
 
-        public ElevatorRepository(string connectionString)
+        public DeviceRepository(string connectionString)
         {
             this.connectionString = connectionString;
             createTable();
@@ -75,9 +75,9 @@ namespace Data.Repositorys
             //}
         }
 
-        public void Add(Elevator add)
+        public void Add(Device add)
         {
-            _elevators.Add(add);
+            _devices.Add(add);
             logger.Info($"Add: {add}");
 
             //lock (_lock)
@@ -142,7 +142,7 @@ namespace Data.Repositorys
             //}
         }
 
-        public void Update(Elevator update)
+        public void Update(Device update)
         {
             logger.Info($"Update: {update}");
 
@@ -199,9 +199,9 @@ namespace Data.Repositorys
             //}
         }
 
-        public void Remove(Elevator remove)
+        public void Remove(Device remove)
         {
-            _elevators.Remove(remove);
+            _devices.Remove(remove);
             logger.Info($"Remove: {remove}");
 
             //lock (_lock)
@@ -217,19 +217,19 @@ namespace Data.Repositorys
             //}
         }
 
-        public List<Elevator> GetAll()
+        public List<Device> GetAll()
         {
             lock (_lock)
             {
-                return _elevators.ToList();
+                return _devices.ToList();
             }
         }
 
-        public Elevator GetById(string id)
+        public Device GetById(string id)
         {
             lock (_lock)
             {
-                return _elevators.FirstOrDefault(m => m.id == id);
+                return _devices.FirstOrDefault(m => m.id == id);
             }
         }
     }

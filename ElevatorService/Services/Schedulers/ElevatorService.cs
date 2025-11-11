@@ -3,6 +3,7 @@ using Data.Interfaces;
 using ElevatorService.Mappings.Interfaces;
 using ElevatorService.MQTTs.Interfaces;
 using log4net;
+using System.Diagnostics;
 
 namespace ElevatorService.Services
 {
@@ -56,10 +57,6 @@ namespace ElevatorService.Services
             _tasks = new List<Task>
              {
                 Task.Run(() => loop())
-
-                //2025.10.31 타이밍 문제로 싱글테스크로 변경
-                //Task.Run(() => JobPlannerloop()),
-                //Task.Run(() => DispatcherLoop()),
             };
         }
 
@@ -74,6 +71,7 @@ namespace ElevatorService.Services
                     try
                     {
                         Schduler();
+                        StatusChangeControl();
                         await Task.Delay(300);
                     }
                     catch (Exception ex)
@@ -118,18 +116,25 @@ namespace ElevatorService.Services
         public void updateStateMission(Mission mission, string state, bool historyAdd = false)
         {
             mission.state = state;
-            mission.updatedAt = DateTime.Now;
-
-            if (mission.finishedAt == null)
+            switch (mission.state)
             {
-                switch (mission.state)
-                {
-                    case nameof(MissionState.SKIPPED):
-                    case nameof(MissionState.CANCELED):
-                    case nameof(MissionState.COMPLETED):
-                        mission.finishedAt = DateTime.Now;
-                        break;
-                }
+                case nameof(MissionState.PENDING):
+                case nameof(MissionState.EXECUTING):
+                case nameof(MissionState.FAILED):
+                case nameof(MissionState.ABORTINITED):
+                case nameof(MissionState.ABORTCOMPLETED):
+                case nameof(MissionState.ABORTFAILED):
+                case nameof(MissionState.CANCELINITED):
+                case nameof(MissionState.CANCELINITCOMPLETED):
+                case nameof(MissionState.CNACELFAILED):
+                    mission.updatedAt = DateTime.Now;
+                    break;
+
+                case nameof(MissionState.SKIPPED):
+                case nameof(MissionState.CANCELED):
+                case nameof(MissionState.COMPLETED):
+                    mission.finishedAt = DateTime.Now;
+                    break;
             }
 
             _repository.Missions.Update(mission);
@@ -140,18 +145,30 @@ namespace ElevatorService.Services
         public void updateStateCommand(Command command, string state, bool historyAdd = false)
         {
             command.state = state;
-            command.updatedAt = DateTime.Now;
 
-            if (command.finishedAt == null)
-            {   
-                switch (command.state)
-                {
-                    case nameof(CommandState.SKIPPED):
-                    case nameof(CommandState.CANCELED):
-                    case nameof(CommandState.COMPLETED):
-                        command.finishedAt = DateTime.Now;
-                        break;
-                }
+            switch (command.state)
+            {
+                case nameof(CommandState.INIT):
+                case nameof(CommandState.WAITING):
+                case nameof(CommandState.COMMANDREQUEST):
+                case nameof(CommandState.COMMANDREQUESTCOMPLETED):
+                case nameof(CommandState.PENDING):
+                case nameof(CommandState.EXECUTING):
+                case nameof(CommandState.FAILED):
+                case nameof(CommandState.ABORTINITED):
+                case nameof(CommandState.ABORTCOMPLETED):
+                case nameof(CommandState.ABORTFAILED):
+                case nameof(CommandState.CANCELINITED):
+                case nameof(CommandState.CANCELINITCOMPLETED):
+                case nameof(CommandState.CNACELFAILED):
+                    command.updatedAt = DateTime.Now;
+                    break;
+
+                case nameof(CommandState.SKIPPED):
+                case nameof(CommandState.CANCELED):
+                case nameof(CommandState.COMPLETED):
+                    command.finishedAt = DateTime.Now;
+                    break;
             }
 
             _repository.Commands.Update(command);

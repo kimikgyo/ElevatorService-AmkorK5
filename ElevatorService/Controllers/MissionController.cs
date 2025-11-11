@@ -128,16 +128,15 @@ namespace ElevatorService.Controllers
                 var mission = _mapping.Missions.AddRequest(addRequestDtoMission, condition.elevatorId, condition.sourceFloor, condition.destFloor);
                 if (mission != null)
                 {
+             
                     _repository.Missions.Add(mission);
-                    _repository.Commands.Add(CreateCommand_1(mission));
-                    _repository.Commands.Add(CreateCommand_2(mission));
-                    _repository.Commands.Add(CreateCommand_3(mission));
-                    _repository.Commands.Add(CreateCommand_4(mission));
-                    _repository.Commands.Add(CreateCommand_5(mission));
-                    _repository.Commands.Add(CreateCommand_6(mission));
-                    _repository.Commands.Add(CreateCommand_7(mission));
-                    _repository.Commands.Add(CreateCommand_8(mission));
-                    _repository.Commands.Add(CreateCommand_9(mission));
+                    _repository.Commands.Add(CreateCommand_1(mission));     //ElevatorCall
+                    //_repository.Commands.Add(CreateCommand_3(mission));     //Elevator진입
+                    //_repository.Commands.Add(CreateCommand_4(mission));     //Elevator맵체인지
+                    _repository.Commands.Add(CreateCommand_6(mission));     //Elevator목적지선택
+                    _repository.Commands.Add(CreateCommand_5(mission));     //ElevaotrDoorClose
+                    //_repository.Commands.Add(CreateCommand_8(mission));     //Device 진출위치
+                    _repository.Commands.Add(CreateCommand_9(mission));     //Device DoorClose
                 }
                 return Ok();
             }
@@ -158,7 +157,7 @@ namespace ElevatorService.Controllers
                 type = nameof(Common.Models.CommandType.ACTION),
                 subType = nameof(CommandSubType.SOURCEFLOOR),
                 sequence = 1,
-                state = nameof(CommandState.WAITING),
+                state = nameof(CommandState.INIT),
                 assignedWorkerId = mission.assignedWorkerId,
                 createdAt = DateTime.Now,
                 updatedAt = null,
@@ -166,36 +165,14 @@ namespace ElevatorService.Controllers
             };
             var parameter = new parameter
             {
-                key = "CALL",
-                value = mission.sourceFloor,
+                key = "Action",
+                value = $"CALL_{mission.sourceFloor}",
             };
             command.parameters.Add(parameter);
             command.parameterJson = JsonSerializer.Serialize(command.parameters);
             return command;
         }
 
-        private Command CreateCommand_2(Mission mission)
-        {
-            var command = new Command
-            {
-                acsMissionId = mission.guid,
-                guid = Guid.NewGuid().ToString(),
-                name = "ElevatorDoorOpen",
-                service = mission.elevatorId,
-                type = nameof(Common.Models.CommandType.ACTION),
-                subType = nameof(CommandSubType.DOOROPEN),
-                sequence = 2,
-                state = nameof(CommandState.WAITING),
-                assignedWorkerId = mission.assignedWorkerId,
-                createdAt = DateTime.Now,
-                updatedAt = null,
-                finishedAt = null,
-            };
-            //파라메타가 없더라도 선언을해줘야 DB 에서 불러올때 문제가 없음
-            command.parameterJson = JsonSerializer.Serialize(command.parameters);
-
-            return command;
-        }
 
         private Command CreateCommand_3(Mission mission)
         {
@@ -208,7 +185,7 @@ namespace ElevatorService.Controllers
                 type = nameof(Common.Models.CommandType.MOVE),
                 subType = nameof(CommandSubType.ELEVATORENTER),
                 sequence = 3,
-                state = nameof(CommandState.WAITING),
+                state = nameof(CommandState.INIT),
                 assignedWorkerId = mission.assignedWorkerId,
                 createdAt = DateTime.Now,
                 updatedAt = null,
@@ -235,7 +212,7 @@ namespace ElevatorService.Controllers
                 type = nameof(Common.Models.CommandType.MAP),
                 subType = nameof(CommandSubType.DESTINATIONCHANGE),
                 sequence = 4,
-                state = nameof(CommandState.WAITING),
+                state = nameof(CommandState.INIT),
                 assignedWorkerId = mission.assignedWorkerId,
                 createdAt = DateTime.Now,
                 updatedAt = null,
@@ -257,12 +234,12 @@ namespace ElevatorService.Controllers
             {
                 acsMissionId = mission.guid,
                 guid = Guid.NewGuid().ToString(),
-                name = "ElevatorGotoDESTINATION",
+                name = "ElevatorDoorClose",
                 service = mission.elevatorId,
                 type = nameof(Common.Models.CommandType.ACTION),
-                subType = nameof(CommandSubType.DESTINATIONFLOOR),
-                sequence = 5,
-                state = nameof(CommandState.WAITING),
+                subType = nameof(CommandSubType.DOORCLOSE),
+                sequence = 6,
+                state = nameof(CommandState.INIT),
                 assignedWorkerId = mission.assignedWorkerId,
                 createdAt = DateTime.Now,
                 updatedAt = null,
@@ -270,8 +247,8 @@ namespace ElevatorService.Controllers
             };
             var parameter = new parameter
             {
-                key = "GOTO",
-                value = mission.destinationFloor,
+                key = "Action",
+                value = nameof(Command_ElevatorAction.DOORCLOSE),
             };
             command.parameters.Add(parameter);
             command.parameterJson = JsonSerializer.Serialize(command.parameters);
@@ -284,42 +261,27 @@ namespace ElevatorService.Controllers
             {
                 acsMissionId = mission.guid,
                 guid = Guid.NewGuid().ToString(),
-                name = "ElevatorDoorClose",
+                name = "ElevatorGotoDESTINATION",
                 service = mission.elevatorId,
                 type = nameof(Common.Models.CommandType.ACTION),
-                subType = nameof(CommandSubType.DOORCLOSE),
-                sequence = 6,
-                state = nameof(CommandState.WAITING),
+                subType = nameof(CommandSubType.DESTINATIONFLOOR),
+                sequence = 5,
+                state = nameof(CommandState.INIT),
                 assignedWorkerId = mission.assignedWorkerId,
                 createdAt = DateTime.Now,
                 updatedAt = null,
                 finishedAt = null,
             };
-            command.parameterJson = JsonSerializer.Serialize(command.parameters);
-            return command;
-        }
-
-        private Command CreateCommand_7(Mission mission)
-        {
-            var command = new Command
+            var parameter = new parameter
             {
-                acsMissionId = mission.guid,
-                guid = Guid.NewGuid().ToString(),
-                name = "ElevatorDoorOpen",
-                service = mission.elevatorId,
-                type = nameof(Common.Models.CommandType.ACTION),
-                subType = nameof(CommandSubType.DOOROPEN),
-                sequence = 7,
-                state = nameof(CommandState.WAITING),
-                assignedWorkerId = mission.assignedWorkerId,
-                createdAt = DateTime.Now,
-                updatedAt = null,
-                finishedAt = null,
+                key = "Action",
+                value = $"GOTO_{mission.destinationFloor}",
             };
+            command.parameters.Add(parameter);
             command.parameterJson = JsonSerializer.Serialize(command.parameters);
-
             return command;
         }
+
 
         private Command CreateCommand_8(Mission mission)
         {
@@ -332,7 +294,7 @@ namespace ElevatorService.Controllers
                 type = nameof(Common.Models.CommandType.MOVE),
                 subType = nameof(CommandSubType.ELEVATOREXIT),
                 sequence = 8,
-                state = nameof(CommandState.WAITING),
+                state = nameof(CommandState.INIT),
                 assignedWorkerId = mission.assignedWorkerId,
                 createdAt = DateTime.Now,
                 updatedAt = null,
@@ -359,12 +321,18 @@ namespace ElevatorService.Controllers
                 type = nameof(Common.Models.CommandType.ACTION),
                 subType = nameof(CommandSubType.DOORCLOSE),
                 sequence = 9,
-                state = nameof(CommandState.WAITING),
+                state = nameof(CommandState.INIT),
                 assignedWorkerId = mission.assignedWorkerId,
                 createdAt = DateTime.Now,
                 updatedAt = null,
                 finishedAt = null,
             };
+            var parameter = new parameter
+            {
+                key = "Action",
+                value = "DOORCLOSE",
+            };
+            command.parameters.Add(parameter);
             command.parameterJson = JsonSerializer.Serialize(command.parameters);
 
             return command;

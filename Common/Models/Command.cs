@@ -39,6 +39,28 @@ namespace Common.Models
         CANCELINITCOMPLETED,        // SchedulerCancel 완료
         CNACELFAILED                // SchedulerCancel 실패
     }
+    public enum Command_ElevatorAction
+    {
+        None = 0,
+        AGVMODE,
+        NOTAGVMODE,
+        DOOROPEN,
+        DOORCLOSE,
+        CALL_B1F,
+        CALL_1F,
+        CALL_2F,
+        CALL_3F,
+        CALL_4F,
+        CALL_5F,
+        CALL_6F,
+        GOTO_B1F,
+        GOTO_1F,
+        GOTO_2F,
+        GOTO_3F,
+        GOTO_4F,
+        GOTO_5F,
+        GOTO_6F,
+    }
 
     public class Command
     {
