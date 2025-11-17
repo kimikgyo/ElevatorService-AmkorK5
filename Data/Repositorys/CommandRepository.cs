@@ -215,7 +215,9 @@ namespace Data.Repositorys
         {
             lock (_lock)
             {
-                return commands.Where(m => (m.state == nameof(CommandState.PENDING)) || (m.state == nameof(CommandState.EXECUTING)) || (m.state == nameof(CommandState.COMMANDREQUESTCOMPLETED))).ToList();
+                return commands.Where(m => (m.state == nameof(CommandState.PENDING)) 
+                                  || (m.state == nameof(CommandState.EXECUTING)) 
+                                  || (m.state == nameof(CommandState.COMMANDREQUESTCOMPLETED))).ToList();
             }
         }
     }

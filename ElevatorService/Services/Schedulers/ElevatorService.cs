@@ -3,7 +3,6 @@ using Data.Interfaces;
 using ElevatorService.Mappings.Interfaces;
 using ElevatorService.MQTTs.Interfaces;
 using log4net;
-using System.Diagnostics;
 
 namespace ElevatorService.Services
 {
@@ -115,65 +114,71 @@ namespace ElevatorService.Services
 
         public void updateStateMission(Mission mission, string state, bool historyAdd = false)
         {
-            mission.state = state;
-            switch (mission.state)
+            if (mission.state != state)
             {
-                case nameof(MissionState.PENDING):
-                case nameof(MissionState.EXECUTING):
-                case nameof(MissionState.FAILED):
-                case nameof(MissionState.ABORTINITED):
-                case nameof(MissionState.ABORTCOMPLETED):
-                case nameof(MissionState.ABORTFAILED):
-                case nameof(MissionState.CANCELINITED):
-                case nameof(MissionState.CANCELINITCOMPLETED):
-                case nameof(MissionState.CNACELFAILED):
-                    mission.updatedAt = DateTime.Now;
-                    break;
+                mission.state = state;
+                switch (mission.state)
+                {
+                    case nameof(MissionState.PENDING):
+                    case nameof(MissionState.EXECUTING):
+                    case nameof(MissionState.FAILED):
+                    case nameof(MissionState.ABORTINITED):
+                    case nameof(MissionState.ABORTCOMPLETED):
+                    case nameof(MissionState.ABORTFAILED):
+                    case nameof(MissionState.CANCELINITED):
+                    case nameof(MissionState.CANCELINITCOMPLETED):
+                    case nameof(MissionState.CNACELFAILED):
+                        mission.updatedAt = DateTime.Now;
+                        break;
 
-                case nameof(MissionState.SKIPPED):
-                case nameof(MissionState.CANCELED):
-                case nameof(MissionState.COMPLETED):
-                    mission.finishedAt = DateTime.Now;
-                    break;
+                    case nameof(MissionState.SKIPPED):
+                    case nameof(MissionState.CANCELED):
+                    case nameof(MissionState.COMPLETED):
+                        mission.finishedAt = DateTime.Now;
+                        break;
+                }
+
+                _repository.Missions.Update(mission);
+                // if (historyAdd) _repository.MissionHistorys.Add(mission);
+                _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.MqttPublish(mission));
             }
-
-            _repository.Missions.Update(mission);
-            if (historyAdd) _repository.MissionHistorys.Add(mission);
-            _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.MqttPublish(mission));
         }
 
         public void updateStateCommand(Command command, string state, bool historyAdd = false)
         {
-            command.state = state;
-
-            switch (command.state)
+            if (command.state != state)
             {
-                case nameof(CommandState.INIT):
-                case nameof(CommandState.WAITING):
-                case nameof(CommandState.COMMANDREQUEST):
-                case nameof(CommandState.COMMANDREQUESTCOMPLETED):
-                case nameof(CommandState.PENDING):
-                case nameof(CommandState.EXECUTING):
-                case nameof(CommandState.FAILED):
-                case nameof(CommandState.ABORTINITED):
-                case nameof(CommandState.ABORTCOMPLETED):
-                case nameof(CommandState.ABORTFAILED):
-                case nameof(CommandState.CANCELINITED):
-                case nameof(CommandState.CANCELINITCOMPLETED):
-                case nameof(CommandState.CNACELFAILED):
-                    command.updatedAt = DateTime.Now;
-                    break;
+                command.state = state;
 
-                case nameof(CommandState.SKIPPED):
-                case nameof(CommandState.CANCELED):
-                case nameof(CommandState.COMPLETED):
-                    command.finishedAt = DateTime.Now;
-                    break;
+                switch (command.state)
+                {
+                    case nameof(CommandState.INIT):
+                    case nameof(CommandState.WAITING):
+                    case nameof(CommandState.COMMANDREQUEST):
+                    case nameof(CommandState.COMMANDREQUESTCOMPLETED):
+                    case nameof(CommandState.PENDING):
+                    case nameof(CommandState.EXECUTING):
+                    case nameof(CommandState.FAILED):
+                    case nameof(CommandState.ABORTINITED):
+                    case nameof(CommandState.ABORTCOMPLETED):
+                    case nameof(CommandState.ABORTFAILED):
+                    case nameof(CommandState.CANCELINITED):
+                    case nameof(CommandState.CANCELINITCOMPLETED):
+                    case nameof(CommandState.CNACELFAILED):
+                        command.updatedAt = DateTime.Now;
+                        break;
+
+                    case nameof(CommandState.SKIPPED):
+                    case nameof(CommandState.CANCELED):
+                    case nameof(CommandState.COMPLETED):
+                        command.finishedAt = DateTime.Now;
+                        break;
+                }
+
+                _repository.Commands.Update(command);
+                //if (historyAdd) _repository.Commands.Add(command);
+                //_mqttQueue.MqttPublishMessage(TopicType., TopicSubType.status, _mapping.Missions.MqttPublish(mission));
             }
-
-            _repository.Commands.Update(command);
-            //if (historyAdd) _repository.Commands.Add(command);
-            //_mqttQueue.MqttPublishMessage(TopicType., TopicSubType.status, _mapping.Missions.MqttPublish(mission));
         }
     }
 }

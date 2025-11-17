@@ -11,6 +11,8 @@ namespace ElevatorService.Services
     public class MainService
     {
         private static readonly ILog EventLogger = LogManager.GetLogger("Event");
+        private static readonly ILog TestLogger = LogManager.GetLogger("Test");
+
 
         public readonly IUnitOfWorkRepository _repository;
         public readonly IConfiguration _configuration;

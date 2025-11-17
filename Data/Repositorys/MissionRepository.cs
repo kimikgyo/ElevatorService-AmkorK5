@@ -30,6 +30,7 @@ namespace Data.Repositorys
                     (
                          [orderId]               NVARCHAR(64)     NULL
                         ,[jobId]                 NVARCHAR(64)     NULL
+                        ,[acsMissionId]          NVARCHAR(64)     NULL                        
                         ,[guid]                  NVARCHAR(64)     NULL
                         ,[carrierId]             NVARCHAR(64)     NULL
                         ,[service]               NVARCHAR(64)     NULL
@@ -87,6 +88,7 @@ namespace Data.Repositorys
                                  (
                                        [orderId]
                                       ,[jobId]
+                                      ,[acsMissionId]                                      
                                       ,[guid]
                                       ,[carrierId]
                                       ,[service]
@@ -111,6 +113,7 @@ namespace Data.Repositorys
                                   (
                                          @orderId
                                         ,@jobId
+                                        ,@acsMissionId                                        
                                         ,@guid
                                         ,@carrierId
                                         ,@service
@@ -151,6 +154,7 @@ namespace Data.Repositorys
                             SET
                                  [orderId]                = @orderId
                                 ,[jobId]                  = @jobId
+                                ,[acsMissionId]           = @acsMissionId                                
                                 ,[carrierId]              = @carrierId
                                 ,[service]                = @service
                                 ,[type]                   = @type

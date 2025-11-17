@@ -26,7 +26,8 @@ namespace Data.Repositorys.Historys
                     (
                        [orderId]                  NVARCHAR(64)     NULL,
                         [jobId]                    NVARCHAR(64)     NULL,
-                        [guid]                     NVARCHAR(64)     NULL,
+                        [guid]                     NVARCHAR(64)     NULL,                       
+                        [acsMissionId]             NVARCHAR(64)     NULL,
                         [carrierId]                NVARCHAR(64)     NULL,
                         [name]                     NVARCHAR(64)     NULL,
                         [service]                  NVARCHAR(64)     NULL,
@@ -72,7 +73,8 @@ namespace Data.Repositorys.Historys
                                    (
                                       [orderId]
                                       ,[jobId]
-                                      ,[guid]
+                                      ,[acsMissionId]
+                                      ,[guid]                                      
                                       ,[carrierId]
                                       ,[name]
                                       ,[service]
@@ -98,6 +100,7 @@ namespace Data.Repositorys.Historys
                                   (
                                      	 @orderId
                                         ,@jobId
+                                        ,@acsMissionId                                        
                                         ,@guid
                                         ,@carrierId
                                         ,@name

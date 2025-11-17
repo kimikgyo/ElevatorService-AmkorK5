@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using log4net;
 
 namespace ElevatorService.Services
 {
@@ -56,16 +57,26 @@ namespace ElevatorService.Services
             foreach (var pandingMission in pandingMissions)
             {
                 var commands = _repository.Commands.GetByMissionId(pandingMission.guid);
+                if (commands == null || commands.Count == 0) continue;
+
                 var runcommand = _repository.Commands.GetByRunCommands(commands).FirstOrDefault();
+
+                foreach (var command1 in commands)
+                {
+                    TestLogger.Info($"{nameof(postCommandControl)} ,command, MissionId = {command1.acsMissionId} , guid = {command1.guid}, name = {command1.name}, state = {command1.state}");
+                }
+
                 if (runcommand != null)
                 {
-
-
+                    TestLogger.Info($"{nameof(postCommandControl)} ,runcommand, MissionId = {runcommand.acsMissionId} , guid = {runcommand.guid}, name = {runcommand.name}, state = {runcommand.state}");
                     continue;
                 }
                 var commandFailed_Request = commands.FirstOrDefault(m => (m.state == nameof(CommandState.FAILED)) || (m.state == nameof(CommandState.COMMANDREQUEST)));
                 if (commandFailed_Request != null)
                 {
+                    TestLogger.Info($"{nameof(postCommandControl)} ,commandFailed_Request, MissionId = {commandFailed_Request.acsMissionId}, guid = {commandFailed_Request.guid}," +
+                                   $", name = {commandFailed_Request.name}, state = {commandFailed_Request.state}");
+
                     command = commandFailed_Request;
                 }
                 else
@@ -74,6 +85,7 @@ namespace ElevatorService.Services
                 }
                 if (command != null)
                 {
+                    TestLogger.Info($"{nameof(postCommandControl)} ,nomal, MissionId = {command.acsMissionId}, guid = {command.guid}, name = {command.name},state = {command.state}");
                     updateStateCommand(command, nameof(CommandState.COMMANDREQUEST), true);
                     postCommand(command);
                 }

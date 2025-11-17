@@ -16,7 +16,7 @@ namespace ElevatorService.Services
             foreach (var command in _repository.Commands.GetAll().Where(m => m.state == nameof(CommandState.COMMANDREQUESTCOMPLETED) || m.state == nameof(CommandState.SKIPPED)).ToList())
             {
                 var mission = _repository.Missions.GetById(command.acsMissionId);
-                if (mission != null && mission.state != nameof(MissionState.EXECUTING))
+                if (mission != null)
                 {
                     updateStateMission(mission, nameof(MissionState.EXECUTING), true);
                 }

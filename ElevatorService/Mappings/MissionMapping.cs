@@ -1,5 +1,6 @@
 ﻿using Common.DTOs;
 using Common.Models;
+using System.Text.Json;
 
 namespace ElevatorService.Mappings
 {
@@ -11,7 +12,8 @@ namespace ElevatorService.Mappings
             {
                 orderId = apiAddRequestDto.orderId,
                 jobId = apiAddRequestDto.jobId,
-                guid = apiAddRequestDto.guid,
+                acsMissionId = apiAddRequestDto.guid,
+                guid = Guid.NewGuid().ToString(),
                 carrierId = apiAddRequestDto.carrierId,
                 service = apiAddRequestDto.service,
                 type = apiAddRequestDto.type,
@@ -27,6 +29,7 @@ namespace ElevatorService.Mappings
                 elevatorId = elevatorId,
                 sourceFloor = sourceFloor,
                 destinationFloor = destFloor,
+                parameterJson = JsonSerializer.Serialize(apiAddRequestDto.parameters),
                 createdAt = DateTime.Now,
             };
             return model;

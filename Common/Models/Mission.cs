@@ -11,7 +11,6 @@ namespace Common.Models
 
     public enum MissionType
     {
-     
     }
 
     //MISSION 상태
@@ -33,32 +32,33 @@ namespace Common.Models
 
     public enum MissionSubType
     {
-       
     }
 
     public class Mission
     {
-        [JsonPropertyOrder(1)] public string        orderId { get; set; }
-        [JsonPropertyOrder(2)] public string        jobId { get; set; }
-        [JsonPropertyOrder(3)] public string        guid { get; set; }
-        [JsonPropertyOrder(4)] public string        carrierId { get; set; }
-        [JsonPropertyOrder(5)] public string        service { get; set; }
-        [JsonPropertyOrder(6)] public string        type { get; set; }
-        [JsonPropertyOrder(7)] public string        subType { get; set; }
-        [JsonPropertyOrder(8)] public string        linkedFacility { get; set; }
-        [JsonPropertyOrder(9)] public int           sequence { get; set; }
-        [JsonPropertyOrder(10)] public bool         isLocked { get; set; }
-        [JsonPropertyOrder(11)] public int          sequenceChangeCount { get; set; }
-        [JsonPropertyOrder(12)] public int          retryCount { get; set; }
-        [JsonPropertyOrder(13)] public string       state { get; set; }
-        [JsonPropertyOrder(14)] public string       specifiedWorkerId { get; set; }
-        [JsonPropertyOrder(15)] public string       assignedWorkerId { get; set; }
-        [JsonPropertyOrder(16)] public string       elevatorId { get; set; }
-        [JsonPropertyOrder(17)] public string       sourceFloor { get; set; }
-        [JsonPropertyOrder(18)] public string       destinationFloor { get; set; }
-        [JsonPropertyOrder(19)] public DateTime     createdAt { get; set; }
-        [JsonPropertyOrder(20)] public DateTime?    updatedAt { get; set; }
-        [JsonPropertyOrder(21)] public DateTime?    finishedAt { get; set; }
+        [JsonPropertyOrder(1)] public string orderId { get; set; }
+        [JsonPropertyOrder(2)] public string jobId { get; set; }
+        [JsonPropertyOrder(3)] public string acsMissionId { get; set; }
+        [JsonPropertyOrder(4)] public string guid { get; set; }
+        [JsonPropertyOrder(5)] public string carrierId { get; set; }
+        [JsonPropertyOrder(6)] public string service { get; set; }
+        [JsonPropertyOrder(7)] public string type { get; set; }
+        [JsonPropertyOrder(8)] public string subType { get; set; }
+        [JsonPropertyOrder(9)] public string linkedFacility { get; set; }
+        [JsonPropertyOrder(10)] public int sequence { get; set; }
+        [JsonPropertyOrder(11)] public bool isLocked { get; set; }
+        [JsonPropertyOrder(12)] public int sequenceChangeCount { get; set; }
+        [JsonPropertyOrder(13)] public int retryCount { get; set; }
+        [JsonPropertyOrder(14)] public string state { get; set; }
+        [JsonPropertyOrder(15)] public string specifiedWorkerId { get; set; }
+        [JsonPropertyOrder(16)] public string assignedWorkerId { get; set; }
+        [JsonPropertyOrder(17)] public string elevatorId { get; set; }
+        [JsonPropertyOrder(18)] public string sourceFloor { get; set; }
+        [JsonPropertyOrder(19)] public string destinationFloor { get; set; }
+        [JsonPropertyOrder(20)] public string parameterJson { get; set; }
+        [JsonPropertyOrder(21)] public DateTime createdAt { get; set; }
+        [JsonPropertyOrder(22)] public DateTime? updatedAt { get; set; }
+        [JsonPropertyOrder(23)] public DateTime? finishedAt { get; set; }
 
         // 사람용 요약 (디버거/로그에서 보기 좋게)
         public override string ToString()
@@ -66,6 +66,7 @@ namespace Common.Models
             return
                 $" orderId = {orderId,-5}" +
                 $",jobId = {jobId,-5}" +
+                $",acsMissionId = {acsMissionId,-5}" +
                 $",guid = {guid,-5}" +
                 $",carrierId = {carrierId,-5}" +
                 $",service = {service,-5}" +
@@ -82,6 +83,7 @@ namespace Common.Models
                 $",elevatorId = {elevatorId,-5}" +
                 $",sourceFloor = {sourceFloor,-5}" +
                 $",destinationFloor = {destinationFloor,-5}" +
+                $",parameterJson = {parameterJson,-5}" +
                 $",createdAt = {createdAt,-5}" +
                 $",updatedAt = {updatedAt,-5}" +
                 $",finishedAt = {finishedAt,-5}";
@@ -99,7 +101,4 @@ namespace Common.Models
         //        });
         //}
     }
-
-
-
 }

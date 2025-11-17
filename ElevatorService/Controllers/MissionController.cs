@@ -6,6 +6,7 @@ using ElevatorService.MQTTs.Interfaces;
 using log4net;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Reflection;
 using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -122,23 +123,37 @@ namespace ElevatorService.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] ApiAddRequestDtoMission addRequestDtoMission)
         {
+            Command command = null;
+            Mission mission = null;
             var condition = ConditionAddMission(addRequestDtoMission);
-            if (condition.elevatorId != null && condition.sourceFloor != null && condition.destFloor != null && condition.massage == null)
+            if (condition.elevatorId != null && condition.massage == null)
             {
-                var mission = _mapping.Missions.AddRequest(addRequestDtoMission, condition.elevatorId, condition.sourceFloor, condition.destFloor);
+                var sourceFloor = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "SOURCEFLOOR").Select(s => s.value).FirstOrDefault();
+                var destinationFloor = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "DESTINATIONFLOOR").Select(s => s.value).FirstOrDefault();
+                var doorClose = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "ACTION").Select(s => s.value).FirstOrDefault();
+                mission = _mapping.Missions.AddRequest(addRequestDtoMission, condition.elevatorId, sourceFloor, destinationFloor);
                 if (mission != null)
                 {
-             
-                    _repository.Missions.Add(mission);
-                    _repository.Commands.Add(CreateCommand_1(mission));     //ElevatorCall
-                    //_repository.Commands.Add(CreateCommand_3(mission));     //Elevator진입
-                    //_repository.Commands.Add(CreateCommand_4(mission));     //Elevator맵체인지
-                    _repository.Commands.Add(CreateCommand_6(mission));     //Elevator목적지선택
-                    _repository.Commands.Add(CreateCommand_5(mission));     //ElevaotrDoorClose
-                    //_repository.Commands.Add(CreateCommand_8(mission));     //Device 진출위치
-                    _repository.Commands.Add(CreateCommand_9(mission));     //Device DoorClose
+                    if (sourceFloor != null)
+                    {
+                        command = createSourceFloorCommand(mission);
+                    }
+                    else if (destinationFloor != null)
+                    {
+                        command = createDestinationFloorCommand(mission);
+                    }
+                    else if (doorClose != null)
+                    {
+                        command = createDoorClose(mission);
+                    }
                 }
-                return Ok();
+            }
+
+            if (command != null)
+            {
+                _repository.Commands.Add(command);     //ElevatorCall
+                _repository.Missions.Add(mission);
+                return Ok(command);
             }
             else
             {
@@ -146,7 +161,7 @@ namespace ElevatorService.Controllers
             }
         }
 
-        private Command CreateCommand_1(Mission mission)
+        private Command createSourceFloorCommand(Mission mission)
         {
             var command = new Command
             {
@@ -173,89 +188,7 @@ namespace ElevatorService.Controllers
             return command;
         }
 
-
-        private Command CreateCommand_3(Mission mission)
-        {
-            var command = new Command
-            {
-                acsMissionId = mission.guid,
-                guid = Guid.NewGuid().ToString(),
-                name = "ElevatorEnterMove",
-                service = "WORKER",
-                type = nameof(Common.Models.CommandType.MOVE),
-                subType = nameof(CommandSubType.ELEVATORENTER),
-                sequence = 3,
-                state = nameof(CommandState.INIT),
-                assignedWorkerId = mission.assignedWorkerId,
-                createdAt = DateTime.Now,
-                updatedAt = null,
-                finishedAt = null,
-            };
-            var parameter = new parameter
-            {
-                key = "target",
-                value = null,
-            };
-            command.parameters.Add(parameter);
-            command.parameterJson = JsonSerializer.Serialize(command.parameters);
-            return command;
-        }
-
-        private Command CreateCommand_4(Mission mission)
-        {
-            var command = new Command
-            {
-                acsMissionId = mission.guid,
-                guid = Guid.NewGuid().ToString(),
-                name = "WorkerMapChange",
-                service = "WORKER",
-                type = nameof(Common.Models.CommandType.MAP),
-                subType = nameof(CommandSubType.DESTINATIONCHANGE),
-                sequence = 4,
-                state = nameof(CommandState.INIT),
-                assignedWorkerId = mission.assignedWorkerId,
-                createdAt = DateTime.Now,
-                updatedAt = null,
-                finishedAt = null,
-            };
-            var parameter = new parameter
-            {
-                key = "mapId",
-                value = "Mapid",
-            };
-            command.parameters.Add(parameter);
-            command.parameterJson = JsonSerializer.Serialize(command.parameters);
-            return command;
-        }
-
-        private Command CreateCommand_5(Mission mission)
-        {
-            var command = new Command
-            {
-                acsMissionId = mission.guid,
-                guid = Guid.NewGuid().ToString(),
-                name = "ElevatorDoorClose",
-                service = mission.elevatorId,
-                type = nameof(Common.Models.CommandType.ACTION),
-                subType = nameof(CommandSubType.DOORCLOSE),
-                sequence = 6,
-                state = nameof(CommandState.INIT),
-                assignedWorkerId = mission.assignedWorkerId,
-                createdAt = DateTime.Now,
-                updatedAt = null,
-                finishedAt = null,
-            };
-            var parameter = new parameter
-            {
-                key = "Action",
-                value = nameof(Command_ElevatorAction.DOORCLOSE),
-            };
-            command.parameters.Add(parameter);
-            command.parameterJson = JsonSerializer.Serialize(command.parameters);
-            return command;
-        }
-
-        private Command CreateCommand_6(Mission mission)
+        private Command createDestinationFloorCommand(Mission mission)
         {
             var command = new Command
             {
@@ -282,35 +215,7 @@ namespace ElevatorService.Controllers
             return command;
         }
 
-
-        private Command CreateCommand_8(Mission mission)
-        {
-            var command = new Command
-            {
-                acsMissionId = mission.guid,
-                guid = Guid.NewGuid().ToString(),
-                name = "ElevatorExitMove",
-                service = "WORKER",
-                type = nameof(Common.Models.CommandType.MOVE),
-                subType = nameof(CommandSubType.ELEVATOREXIT),
-                sequence = 8,
-                state = nameof(CommandState.INIT),
-                assignedWorkerId = mission.assignedWorkerId,
-                createdAt = DateTime.Now,
-                updatedAt = null,
-                finishedAt = null,
-            };
-            var parameter = new parameter
-            {
-                key = "target",
-                value = null,
-            };
-            command.parameters.Add(parameter);
-            command.parameterJson = JsonSerializer.Serialize(command.parameters);
-            return command;
-        }
-
-        private Command CreateCommand_9(Mission mission)
+        private Command createDoorClose(Mission mission)
         {
             var command = new Command
             {
@@ -338,17 +243,15 @@ namespace ElevatorService.Controllers
             return command;
         }
 
-        private (string elevatorId, string sourceFloor, string destFloor, string massage) ConditionAddMission(ApiAddRequestDtoMission RequestDto)
+        private (string elevatorId, string massage) ConditionAddMission(ApiAddRequestDtoMission RequestDto)
         {
             string massage = null;
             string elevatorId = null;
             string sourceFloor = null;
             string destFloor = null;
             elevatorId = RequestDto.parameters.Where(k => k.key.ToUpper() == "ELEVATORID").Select(s => s.value).FirstOrDefault();
-            sourceFloor = RequestDto.parameters.Where(k => k.key.ToUpper() == "SOURCEFLOOR").Select(s => s.value).FirstOrDefault();
-            destFloor = RequestDto.parameters.Where(k => k.key.ToUpper() == "DESTINATIONFLOOR").Select(s => s.value).FirstOrDefault();
 
-            return (elevatorId, sourceFloor, destFloor, massage);
+            return (elevatorId, massage);
         }
 
         //// PUT api/<MissionController>/5
