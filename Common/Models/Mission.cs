@@ -40,7 +40,8 @@ namespace Common.Models
         [JsonPropertyOrder(2)] public string jobId { get; set; }
         [JsonPropertyOrder(3)] public string acsMissionId { get; set; }
         [JsonPropertyOrder(4)] public string guid { get; set; }
-        [JsonPropertyOrder(5)] public string carrierId { get; set; }
+        [JsonPropertyOrder(5)] public string name{ get; set; }
+        [JsonPropertyOrder(6)] public string carrierId { get; set; }
         [JsonPropertyOrder(6)] public string service { get; set; }
         [JsonPropertyOrder(7)] public string type { get; set; }
         [JsonPropertyOrder(8)] public string subType { get; set; }
@@ -68,6 +69,7 @@ namespace Common.Models
                 $",jobId = {jobId,-5}" +
                 $",acsMissionId = {acsMissionId,-5}" +
                 $",guid = {guid,-5}" +
+                $",name = {name,-5}" +
                 $",carrierId = {carrierId,-5}" +
                 $",service = {service,-5}" +
                 $",type = {type,-5}" +

@@ -251,5 +251,12 @@ namespace Data.Repositorys
                 return _missions.FirstOrDefault(m => m.guid == id);
             }
         }
+        public Mission GetByAcsId(string acsMissionId)
+        {
+            lock (_lock)
+            {
+                return _missions.FirstOrDefault(m => m.acsMissionId == acsMissionId);
+            }
+        }
     }
 }

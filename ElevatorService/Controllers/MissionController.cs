@@ -153,6 +153,7 @@ namespace ElevatorService.Controllers
             {
                 _repository.Commands.Add(command);     //ElevatorCall
                 _repository.Missions.Add(mission);
+                _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.MqttPublish(mission));
                 return Ok(command);
             }
             else
@@ -165,7 +166,7 @@ namespace ElevatorService.Controllers
         {
             var command = new Command
             {
-                acsMissionId = mission.guid,
+                acsMissionId = mission.acsMissionId,
                 guid = Guid.NewGuid().ToString(),
                 name = "ElevatorCALL",
                 service = mission.elevatorId,
@@ -192,7 +193,7 @@ namespace ElevatorService.Controllers
         {
             var command = new Command
             {
-                acsMissionId = mission.guid,
+                acsMissionId = mission.acsMissionId,
                 guid = Guid.NewGuid().ToString(),
                 name = "ElevatorGotoDESTINATION",
                 service = mission.elevatorId,
@@ -219,7 +220,7 @@ namespace ElevatorService.Controllers
         {
             var command = new Command
             {
-                acsMissionId = mission.guid,
+                acsMissionId = mission.acsMissionId,
                 guid = Guid.NewGuid().ToString(),
                 name = "ElevatorDoorClose",
                 service = mission.elevatorId,
@@ -249,6 +250,9 @@ namespace ElevatorService.Controllers
             string elevatorId = null;
             string sourceFloor = null;
             string destFloor = null;
+            var missionid = _repository.Missions.GetByAcsId(RequestDto.guid);
+            if (missionid != null) massage = "Check missionGuid";
+
             elevatorId = RequestDto.parameters.Where(k => k.key.ToUpper() == "ELEVATORID").Select(s => s.value).FirstOrDefault();
 
             return (elevatorId, massage);

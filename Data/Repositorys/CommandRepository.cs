@@ -187,12 +187,18 @@ namespace Data.Repositorys
                 return _commands.ToList();
             }
         }
-
+        public List<Command> GetByAcsMissionId(string acsmissionId)
+        {
+            lock (_lock)
+            {
+                return _commands.Where(m => m.acsMissionId == acsmissionId).ToList();
+            }
+        }
         public List<Command> GetByMissionId(string missionId)
         {
             lock (_lock)
             {
-                return _commands.Where(m => m.acsMissionId == missionId).ToList();
+                return _commands.Where(m => m.guid == missionId).ToList();
             }
         }
 

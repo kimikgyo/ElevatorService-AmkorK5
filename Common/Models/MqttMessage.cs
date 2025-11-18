@@ -10,6 +10,7 @@
         position,
         carrier,
         elevator,
+        NO1
     }
 
     public enum TopicSubType

@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using log4net;
+using System.Text.Json;
 
 namespace ElevatorService.Services
 {
@@ -31,7 +32,7 @@ namespace ElevatorService.Services
 
             if (mission != null)
             {
-                var commands = _repository.Commands.GetByMissionId(mission.guid).Where(c => c.state == nameof(CommandState.INIT)).ToList();
+                var commands = _repository.Commands.GetByAcsMissionId(mission.acsMissionId).Where(c => c.state == nameof(CommandState.INIT)).ToList();
                 foreach (var command in commands)
                 {
                     updateStateCommand(command, nameof(CommandState.WAITING), true);
@@ -56,7 +57,7 @@ namespace ElevatorService.Services
 
             foreach (var pandingMission in pandingMissions)
             {
-                var commands = _repository.Commands.GetByMissionId(pandingMission.guid);
+                var commands = _repository.Commands.GetByAcsMissionId(pandingMission.acsMissionId);
                 if (commands == null || commands.Count == 0) continue;
 
                 var runcommand = _repository.Commands.GetByRunCommands(commands).FirstOrDefault();
@@ -209,6 +210,12 @@ namespace ElevatorService.Services
                                                  || (m.sourceFloor == "6F"));
                     break;
             }
+
+            if(mission == null )
+            {
+                mission = missions.FirstOrDefault();
+            }
+            
             return mission;
         }
 

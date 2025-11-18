@@ -66,9 +66,6 @@ namespace ElevatorService.MQTTs.Interfaces
         {
             switch (subscribe.type)
             {
-                case nameof(TopicType.worker):
-                    QueueStorage.MqttEnqueueSubscribeWorker(subscribe);
-                    break;
                 case nameof(TopicType.elevator):
                     QueueStorage.MqttEnqueueSubscribeElevator(subscribe);
                     break;

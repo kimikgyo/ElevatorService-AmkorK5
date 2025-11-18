@@ -84,7 +84,7 @@ namespace ElevatorService.MQTTs
             }
 
             _repository.Missions.Update(mission);
-            if (historyAdd) _repository.MissionHistorys.Add(mission);
+           // if (historyAdd) _repository.MissionHistorys.Add(mission);
             _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.MqttPublish(mission));
         }
 

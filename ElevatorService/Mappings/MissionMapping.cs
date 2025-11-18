@@ -14,6 +14,7 @@ namespace ElevatorService.Mappings
                 jobId = apiAddRequestDto.jobId,
                 acsMissionId = apiAddRequestDto.guid,
                 guid = Guid.NewGuid().ToString(),
+                name = apiAddRequestDto.name,
                 carrierId = apiAddRequestDto.carrierId,
                 service = apiAddRequestDto.service,
                 type = apiAddRequestDto.type,
@@ -68,7 +69,9 @@ namespace ElevatorService.Mappings
             {
                 orderId = model.orderId,
                 jobId = model.jobId,
+                acsMissionId = model.acsMissionId,
                 guid = model.guid,
+                name = model.name,
                 carrierId = model.carrierId,
                 service = model.service,
                 type = model.type,
