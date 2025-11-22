@@ -1,4 +1,5 @@
-﻿using Common.Models;
+﻿using Common.DTOs.MQTTs.Messages;
+using Common.Models;
 using Data.Repositorys;
 using JOB.MQTTs.Interfaces;
 using log4net;
@@ -150,7 +151,7 @@ namespace ElevatorService.MQTTs.Interfaces
                         RemoveOldUuids(); // 오래된 UUID 정리
                     }
                     // 최종 목적지인 messageQueue에 Enqueue
-                    QueueStorage.MqttEnqueueSubscribe(new MqttSubscribeMessageDto
+                    QueueStorage.MqttEnqueueSubscribe(new SubscribeDto
                     {
                         topic = topic,
                         Payload = payload,

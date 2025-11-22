@@ -62,7 +62,7 @@ namespace Data.Repositorys
             {
                 foreach (var data in con.Query<Command>("SELECT * FROM [Command]"))
                 {
-                    if(data.parameterJson !=null)data.parameters = JsonSerializer.Deserialize<List<parameter>>(data.parameterJson);
+                    if(data.parameterJson !=null)data.parameters = JsonSerializer.Deserialize<List<Parameter>>(data.parameterJson);
 
                     _commands.Add(data);
 

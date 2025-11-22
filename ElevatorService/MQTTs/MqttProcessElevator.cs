@@ -1,4 +1,6 @@
-﻿using Common.DTOs;
+﻿using Common.DTOs.MQTTs.Commands;
+using Common.DTOs.MQTTs.Devices;
+using Common.DTOs.MQTTs.Messages;
 using Common.Models;
 using System.Text.Json;
 
@@ -8,7 +10,7 @@ namespace ElevatorService.MQTTs
     {
         //public void PublishElevaotr()
         //{
-        //    while (QueueStorage.MqttTryDequeuePublishMission(out MqttPublishMessageDto cmd))
+        //    while (QueueStorage.MqttTryDequeuePublishMission(out DTO_Publish cmd))
         //    {
         //        try
         //        {
@@ -24,7 +26,7 @@ namespace ElevatorService.MQTTs
         //}
         public void SubscribeElevator()
         {
-            while (QueueStorage.MqttTryDequeueSubscribeElevator(out MqttSubscribeMessageDto subscribe))
+            while (QueueStorage.MqttTryDequeueSubscribeElevator(out SubscribeDto subscribe))
             {
                 try
                 {
@@ -34,7 +36,7 @@ namespace ElevatorService.MQTTs
                     switch (subscribe.subType)
                     {
                         case nameof(TopicSubType.status):
-                            var status = JsonSerializer.Deserialize<MqttSubscribeDtoStatusDevice>(subscribe.Payload!);
+                            var status = JsonSerializer.Deserialize<Subscribe_DeviceDto>(subscribe.Payload!);
                             if (elevator == null)
                             {
                                 var create = _mapping.Elevators.MqttCreateElevator(status);
@@ -49,7 +51,7 @@ namespace ElevatorService.MQTTs
                             break;
 
                         case nameof(TopicSubType.command):
-                            var commandStateDto = JsonSerializer.Deserialize<MqttSubscribeDtoCommand>(subscribe.Payload!);
+                            var commandStateDto = JsonSerializer.Deserialize<Subscribe_CommandDto>(subscribe.Payload!);
                             var command = _repository.Commands.GetById(commandStateDto.commnadId);
                             if (command != null)
                             {

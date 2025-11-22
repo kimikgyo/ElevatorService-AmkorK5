@@ -1,13 +1,13 @@
-﻿using Common.DTOs;
+﻿using Common.DTOs.Rests.Commands;
 using Common.Models;
 
 namespace ElevatorService.Mappings
 {
     public class CommandMapping
     {
-        public ApiRequestDtoPostCommand ApiRequestDtoPostCommand(Command model)
+        public Request_CommandDto ApiRequestDtoPostCommand(Command model)
         {
-            var apiRequest = new ApiRequestDtoPostCommand
+            var apiRequest = new Request_CommandDto
             {
                 guid = model.guid,
                 name = model.name,

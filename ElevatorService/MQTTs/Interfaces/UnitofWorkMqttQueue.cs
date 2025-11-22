@@ -1,4 +1,5 @@
-﻿using Common.Models;
+﻿using Common.DTOs.MQTTs.Messages;
+using Common.Models;
 using Data.Interfaces;
 using Data.Repositorys;
 using ElevatorService.Mappings.Interfaces;
@@ -39,7 +40,7 @@ namespace ElevatorService.MQTTs.Interfaces
                     switch (getByPublish.type)
                     {
                         case nameof(TopicType.mission):
-                            QueueStorage.MqttEnqueuePublishMission(new MqttPublishMessageDto
+                            QueueStorage.MqttEnqueuePublishMission(new PublishDto
                             {
                                 Topic = getByPublish.topic,
                                 Payload = payload,
@@ -49,7 +50,7 @@ namespace ElevatorService.MQTTs.Interfaces
                             break;
 
                         case nameof(TopicType.position):
-                            QueueStorage.MqttEnqueuePublishPosition(new MqttPublishMessageDto
+                            QueueStorage.MqttEnqueuePublishPosition(new PublishDto
                             {
                                 Topic = getByPublish.topic,
                                 Payload = payload,
@@ -62,15 +63,13 @@ namespace ElevatorService.MQTTs.Interfaces
             }
         }
 
-        public void MqttSubscribe(MqttSubscribeMessageDto subscribe)
+        public void MqttSubscribe(SubscribeDto subscribe)
         {
             switch (subscribe.type)
             {
                 case nameof(TopicType.elevator):
                     QueueStorage.MqttEnqueueSubscribeElevator(subscribe);
                     break;
-
-
             }
         }
 

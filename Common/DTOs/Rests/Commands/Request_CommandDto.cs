@@ -1,34 +1,8 @@
 ﻿using Common.Models;
-using System.Text.Json.Serialization;
 
-namespace Common.DTOs
+namespace Common.DTOs.Rests.Commands
 {
-    public class MqttSubscribeDtoCommand
-    {
-        [JsonPropertyOrder(1)] public string commnadId { get; set; }
-        [JsonPropertyOrder(2)] public string name { get; set; }
-        [JsonPropertyOrder(3)] public string type { get; set; }
-        [JsonPropertyOrder(4)] public string subType { get; set; }
-        [JsonPropertyOrder(5)] public string state { get; set; }
-        [JsonPropertyOrder(6)] public string WorkerId { get; set; }
-        [JsonPropertyOrder(7)] public string actionName { get; set; }
-        [JsonPropertyOrder(8)] public string parametersjson { get; set; }
-
-        public override string ToString()
-        {
-            return
-               $"commnadId = {commnadId,-5}" +
-               $",name = {name,-5}" +
-               $",type = {type,-5}" +
-               $",subType = {subType,-5}" +
-               $",state = {state,-5}" +
-               $",WorkerId = {WorkerId,-5}" +
-               $",actionName = {actionName,-5}" +
-               $",parametersjson = {parametersjson,-5}";
-        }
-    }
-
-    public class ApiRequestDtoPostCommand
+    public class Request_CommandDto
     {
         public string guid { get; set; }
         public string name { get; set; }
@@ -38,7 +12,7 @@ namespace Common.DTOs
         public int sequence { get; set; }
         public string state { get; set; }
         public string assignedWorkerId { get; set; }
-        public List<parameter> parameters { get; set; } = new List<parameter>();
+        public List<Parameter> parameters { get; set; } = new List<Parameter>();
 
         public override string ToString()
         {
@@ -71,4 +45,5 @@ namespace Common.DTOs
             $",parametersStr = {parametersStr,-5}";
         }
     }
+    
 }

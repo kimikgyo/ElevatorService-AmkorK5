@@ -1,4 +1,5 @@
-﻿using Common.Models;
+﻿using Common.DTOs.MQTTs.Messages;
+using Common.Models;
 
 namespace ElevatorService.MQTTs
 {
@@ -6,7 +7,7 @@ namespace ElevatorService.MQTTs
     {
         public void Position()
         {
-            while (QueueStorage.MqttTryDequeuePublishPosition(out MqttPublishMessageDto cmd))
+            while (QueueStorage.MqttTryDequeuePublishPosition(out PublishDto cmd))
             {
                 try
                 {

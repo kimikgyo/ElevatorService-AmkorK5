@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Common.DTOs.Bases
+namespace Common.DTOs.Rests.Maps
 {
-    public class ApiGetResponseDtoResourceMap
+    public class Response_MapDto
     {
         [JsonPropertyOrder(1)] public string _id { get; set; }
         [JsonPropertyOrder(2)] public string mapId { get; set; }

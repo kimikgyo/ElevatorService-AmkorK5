@@ -1,4 +1,5 @@
-﻿using Common.Models;
+﻿using Common.DTOs.MQTTs.Messages;
+using Common.Models;
 using Data.Interfaces;
 using ElevatorService.Mappings.Interfaces;
 using ElevatorService.MQTTs.Interfaces;
@@ -26,7 +27,7 @@ namespace ElevatorService.MQTTs
 
         public void HandleReceivedMqttMessage()
         {
-            while (QueueStorage.MqttTryDequeueSubscribe(out MqttSubscribeMessageDto message))
+            while (QueueStorage.MqttTryDequeueSubscribe(out SubscribeDto message))
             {
                 try
                 {
@@ -84,7 +85,7 @@ namespace ElevatorService.MQTTs
             }
 
             _repository.Missions.Update(mission);
-           // if (historyAdd) _repository.MissionHistorys.Add(mission);
+            // if (historyAdd) _repository.MissionHistorys.Add(mission);
             _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.MqttPublish(mission));
         }
 

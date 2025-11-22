@@ -1,4 +1,4 @@
-﻿using Common.DTOs.Bases;
+﻿using Common.DTOs.Rests.Maps;
 using Common.Models;
 using Data.Interfaces;
 using Data.Repositorys;
@@ -148,7 +148,7 @@ namespace ElevatorService.Services
             return Complete;
         }
 
-        private void ReloadMap(List<ApiGetResponseDtoResourceMap> dtoResourceMaps)
+        private void ReloadMap(List<Response_MapDto> dtoResourceMaps)
         {
             List<Map> Reload = new List<Map>();
             //update Add
@@ -190,7 +190,7 @@ namespace ElevatorService.Services
             }
         }
 
-        //private void ReloadPosition(List<ApiGetResponseDtoResourcePosition> dtoResourcePositions)
+        //private void ReloadPosition(List<Response_PositionDto> dtoResourcePositions)
         //{
         //    List<Position> Reload = new List<Position>();
         //    //update Add

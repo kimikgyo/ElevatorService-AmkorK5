@@ -1,4 +1,4 @@
-﻿using Common.DTOs.Bases;
+﻿using Common.DTOs.Rests.Maps;
 using Data.Interfaces;
 
 namespace Common.Models
@@ -7,7 +7,7 @@ namespace Common.Models
     {
         Uri BaseAddress { get; }
 
-        Task<List<ApiGetResponseDtoResourceMap>> GetResourceMap();
+        Task<List<Response_MapDto>> GetResourceMap();
 
         Task<ApResponseDto> ElevatorPostCommandQueueAsync(object value);
 

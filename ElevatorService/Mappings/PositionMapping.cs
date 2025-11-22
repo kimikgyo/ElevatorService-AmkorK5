@@ -1,11 +1,12 @@
-﻿using Common.DTOs;
+﻿using Common.DTOs.MQTTs.Positions;
+using Common.DTOs.Rests.Positions;
 using Common.Models;
 
 namespace ElevatorService.Mappings
 {
     public class PositionMapping
     {
-        public Position ApiGetResourceResponse(ApiGetResponseDtoResourcePosition model)
+        public Position ApiGetResourceResponse(Response_PositionDto model)
         {
             var response = new Position
             {
@@ -29,18 +30,9 @@ namespace ElevatorService.Mappings
             return response;
         }
 
-        public ApiPatchDtoPositionOccupied ApiPatchResourceRequest(Position model)
+        public Publish_PositionDto MqttPublish(Position model)
         {
-            var Request = new ApiPatchDtoPositionOccupied()
-            {
-                isOccupied = model.isOccupied,
-            };
-            return Request;
-        }
-
-        public MqttPublishDtoPosition MqttPublish(Position model)
-        {
-            var publish = new MqttPublishDtoPosition()
+            var publish = new Publish_PositionDto()
             {
                 id = model.id,
                 source = model.source,

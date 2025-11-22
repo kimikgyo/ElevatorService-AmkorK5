@@ -1,5 +1,5 @@
-﻿using Common.DTOs;
-using Common.DTOs.Bases;
+﻿using Common.DTOs.Rests.Maps;
+using Common.DTOs.Rests.Positions;
 using Common.Models;
 using Data.Interfaces;
 using log4net;
@@ -32,11 +32,11 @@ namespace RestApi.Interfases
             return httpClient;
         }
 
-        public async Task<List<ApiGetResponseDtoResourceMap>> GetResourceMap()
+        public async Task<List<Response_MapDto>> GetResourceMap()
         {
             try
             {
-                return await _httpClient.GetFromJsonAsync<List<ApiGetResponseDtoResourceMap>>("api/maps");
+                return await _httpClient.GetFromJsonAsync<List<Response_MapDto>>("api/maps");
             }
             //catch (Exception ex) when (True(() => _logger.Error(ex)))
             catch (Exception ex) when (True(() => ApiLogger.Error($"IPAddress = {_httpClient.BaseAddress}" + "\r\n" + ex)))
@@ -45,11 +45,11 @@ namespace RestApi.Interfases
             }
         }
 
-        public async Task<List<ApiGetResponseDtoResourcePosition>> GetResourcePosition()
+        public async Task<List<Response_PositionDto>> GetResourcePosition()
         {
             try
             {
-                return await _httpClient.GetFromJsonAsync<List<ApiGetResponseDtoResourcePosition>>("api/positions");
+                return await _httpClient.GetFromJsonAsync<List<Response_PositionDto>>("api/positions");
             }
             //catch (Exception ex) when (True(() => _logger.Error(ex)))
             catch (Exception ex) when (True(() => ApiLogger.Error($"IPAddress = {_httpClient.BaseAddress}" + "\r\n" + ex)))

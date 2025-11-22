@@ -1,25 +1,24 @@
-﻿using Common.DTOs;
+﻿using Common.DTOs.MQTTs.Devices;
 using Common.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace ElevatorService.Mappings
 {
     public class ElevatorMapping()
     {
-        public Device MqttCreateElevator(MqttSubscribeDtoStatusDevice mqttSubscribeDtoStatusDevice)
+        public Device MqttCreateElevator(Subscribe_DeviceDto mqttSubscribeDtoStatusDevice)
         {
             var model = new Device
             {
-              id = mqttSubscribeDtoStatusDevice.id,
-              name = mqttSubscribeDtoStatusDevice.name,
-              mode = mqttSubscribeDtoStatusDevice.mode,
-              state = mqttSubscribeDtoStatusDevice.state,
-              createAt = DateTime.Now,
+                id = mqttSubscribeDtoStatusDevice.id,
+                name = mqttSubscribeDtoStatusDevice.name,
+                mode = mqttSubscribeDtoStatusDevice.mode,
+                state = mqttSubscribeDtoStatusDevice.state,
+                createAt = DateTime.Now,
             };
             return model;
         }
 
-        public void MqttUpdate(Device elevator, MqttSubscribeDtoStatusDevice mqttSubscribeDtoStatusDevice)
+        public void MqttUpdate(Device elevator, Subscribe_DeviceDto mqttSubscribeDtoStatusDevice)
         {
             elevator.id = mqttSubscribeDtoStatusDevice.id;
             elevator.name = mqttSubscribeDtoStatusDevice.name;

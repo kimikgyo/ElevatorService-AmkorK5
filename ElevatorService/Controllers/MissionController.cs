@@ -1,4 +1,5 @@
 ﻿using Common.DTOs;
+using Common.DTOs.Rests.Missions;
 using Common.Models;
 using Data.Interfaces;
 using ElevatorService.Mappings.Interfaces;
@@ -36,7 +37,7 @@ namespace ElevatorService.Controllers
         //{
         //    var mission = _repository.Missions.GetAll().FirstOrDefault();
         //    return Ok(mission);
-        //    //List<ResponseDtoMission> _responseDtos = new List<ResponseDtoMission>();
+        //    //List<Get_Mission_Dto> _responseDtos = new List<Get_Mission_Dto>();
 
         //    //foreach (var model in _repository.Missions.GetAll())
         //    //{
@@ -48,11 +49,11 @@ namespace ElevatorService.Controllers
 
         //History
         //[HttpGet("history")]
-        //public ActionResult<List<ResponseDtoMission>> FindHistory(DateTime startDay, DateTime endDay)
+        //public ActionResult<List<Get_Mission_Dto>> FindHistory(DateTime startDay, DateTime endDay)
         //{
         //    if (startDay != DateTime.MinValue && endDay != DateTime.MinValue)
         //    {
-        //        List<ResponseDtoMission> _responseDtos = new List<ResponseDtoMission>();
+        //        List<Get_Mission_Dto> _responseDtos = new List<Get_Mission_Dto>();
 
         //        if (startDay == endDay) endDay = endDay.AddDays(1);
         //        var histories = _repository.MissionHistorys.FindHistory(startDay, endDay);
@@ -71,9 +72,9 @@ namespace ElevatorService.Controllers
         //}
 
         //[HttpGet("history/today")]
-        //public ActionResult<List<ResponseDtoMission>> GetTodayHistory()
+        //public ActionResult<List<Get_Mission_Dto>> GetTodayHistory()
         //{
-        //    List<ResponseDtoMission> _responseDtos = new List<ResponseDtoMission>();
+        //    List<Get_Mission_Dto> _responseDtos = new List<Get_Mission_Dto>();
 
         //    DateTime today = DateTime.Today;
         //    DateTime tomorrow = today.AddDays(1);
@@ -88,9 +89,9 @@ namespace ElevatorService.Controllers
 
         //finisth
         //[HttpGet("finish/today")]
-        //public ActionResult<List<ResponseDtoMission>> GetTodayFinisthHistory()
+        //public ActionResult<List<Get_Mission_Dto>> GetTodayFinisthHistory()
         //{
-        //    List<ResponseDtoMission> _responseDtos = new List<ResponseDtoMission>();
+        //    List<Get_Mission_Dto> _responseDtos = new List<Get_Mission_Dto>();
 
         //    DateTime today = DateTime.Today;
         //    DateTime tomorrow = today.AddDays(1);
@@ -105,9 +106,9 @@ namespace ElevatorService.Controllers
 
         // GET api/<JobController>/5
         //[HttpGet("{id}")]
-        //public ActionResult<ResponseDtoMission> GetById(string id)
+        //public ActionResult<Get_Mission_Dto> GetById(string id)
         //{
-        //    ResponseDtoMission responseDto = null;
+        //    Get_Mission_Dto responseDto = null;
 
         //    var mission = _repository.Missions.GetById(id);
 
@@ -121,7 +122,7 @@ namespace ElevatorService.Controllers
 
         // POST api/<MissionController>
         [HttpPost]
-        public ActionResult Post([FromBody] ApiAddRequestDtoMission addRequestDtoMission)
+        public ActionResult Post([FromBody] Post_MissionDto addRequestDtoMission)
         {
             Command command = null;
             Mission mission = null;
@@ -179,7 +180,7 @@ namespace ElevatorService.Controllers
                 updatedAt = null,
                 finishedAt = null,
             };
-            var parameter = new parameter
+            var parameter = new Parameter
             {
                 key = "Action",
                 value = $"CALL_{mission.sourceFloor}",
@@ -206,7 +207,7 @@ namespace ElevatorService.Controllers
                 updatedAt = null,
                 finishedAt = null,
             };
-            var parameter = new parameter
+            var parameter = new Parameter
             {
                 key = "Action",
                 value = $"GOTO_{mission.destinationFloor}",
@@ -233,7 +234,7 @@ namespace ElevatorService.Controllers
                 updatedAt = null,
                 finishedAt = null,
             };
-            var parameter = new parameter
+            var parameter = new Parameter
             {
                 key = "Action",
                 value = "DOORCLOSE",
@@ -244,7 +245,7 @@ namespace ElevatorService.Controllers
             return command;
         }
 
-        private (string elevatorId, string massage) ConditionAddMission(ApiAddRequestDtoMission RequestDto)
+        private (string elevatorId, string massage) ConditionAddMission(Post_MissionDto RequestDto)
         {
             string massage = null;
             string elevatorId = null;

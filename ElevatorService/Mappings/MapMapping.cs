@@ -1,11 +1,11 @@
-﻿using Common.DTOs.Bases;
+﻿using Common.DTOs.Rests.Maps;
 using Common.Models;
 
 namespace ElevatorService.Mappings
 {
     public class MapMapping
     {
-        public Map ApiGetResourceResponse(ApiGetResponseDtoResourceMap model)
+        public Map ApiGetResourceResponse(Response_MapDto model)
         {
             var response = new Map
             {

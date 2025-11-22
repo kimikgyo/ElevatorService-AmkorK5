@@ -77,7 +77,7 @@ namespace Common.Models
         public DateTime? updatedAt { get; set; }
         public DateTime? finishedAt { get; set; }
         public string parameterJson { get; set; }
-        public List<parameter> parameters { get; set; } = new List<parameter>();
+        public List<Parameter> parameters { get; set; } = new List<Parameter>();
 
         public override string ToString()
         {
