@@ -36,7 +36,7 @@ namespace ElevatorService.MQTTs
                     switch (subscribe.subType)
                     {
                         case nameof(TopicSubType.status):
-                            var status = JsonSerializer.Deserialize<Subscribe_DeviceDto>(subscribe.Payload!);
+                            var status = JsonSerializer.Deserialize<Subscribe_DeviceStatusDto>(subscribe.Payload!);
                             if (elevator == null)
                             {
                                 var create = _mapping.Elevators.MqttCreateElevator(status);

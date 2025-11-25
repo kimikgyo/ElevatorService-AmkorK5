@@ -30,7 +30,7 @@ namespace Data.Repositorys
                     (
                          [orderId]               NVARCHAR(64)     NULL
                         ,[jobId]                 NVARCHAR(64)     NULL
-                        ,[acsMissionId]          NVARCHAR(64)     NULL                        
+                        ,[acsMissionId]          NVARCHAR(64)     NULL
                         ,[guid]                  NVARCHAR(64)     NULL
                         ,[carrierId]             NVARCHAR(64)     NULL
                         ,[service]               NVARCHAR(64)     NULL
@@ -47,6 +47,7 @@ namespace Data.Repositorys
                         ,[elevatorId]            NVARCHAR(64)     NULL
                         ,[sourceFloor]           NVARCHAR(64)     NULL
                         ,[destinationFloor]      NVARCHAR(64)     NULL
+                        ,[requestMode]           NVARCHAR(64)     NULL
                         ,[createdAt]             datetime         NULL
                         ,[updatedAt]             datetime         NULL
                         ,[finishedAt]            datetime         NULL
@@ -88,7 +89,7 @@ namespace Data.Repositorys
                                  (
                                        [orderId]
                                       ,[jobId]
-                                      ,[acsMissionId]                                      
+                                      ,[acsMissionId]
                                       ,[guid]
                                       ,[carrierId]
                                       ,[service]
@@ -105,6 +106,7 @@ namespace Data.Repositorys
                                       ,[elevatorId]
                                       ,[sourceFloor]
                                       ,[destinationFloor]
+                                      ,[requestMode]
                                       ,[createdAt]
                                       ,[updatedAt]
                                       ,[finishedAt]
@@ -113,7 +115,7 @@ namespace Data.Repositorys
                                   (
                                          @orderId
                                         ,@jobId
-                                        ,@acsMissionId                                        
+                                        ,@acsMissionId
                                         ,@guid
                                         ,@carrierId
                                         ,@service
@@ -130,6 +132,7 @@ namespace Data.Repositorys
                                         ,@elevatorId
                                         ,@sourceFloor
                                         ,@destinationFloor
+                                        ,@requestMode
                                         ,@createdAt
                                         ,@updatedAt
                                         ,@finishedAt
@@ -154,7 +157,7 @@ namespace Data.Repositorys
                             SET
                                  [orderId]                = @orderId
                                 ,[jobId]                  = @jobId
-                                ,[acsMissionId]           = @acsMissionId                                
+                                ,[acsMissionId]           = @acsMissionId
                                 ,[carrierId]              = @carrierId
                                 ,[service]                = @service
                                 ,[type]                   = @type
@@ -170,6 +173,7 @@ namespace Data.Repositorys
                                 ,[elevatorId]             = @elevatorId
                                 ,[sourceFloor]            = @sourceFloor
                                 ,[destinationFloor]       = @destinationFloor
+                                ,[requestMode]            = @requestMode
                                 ,[createdAt]              = @createdAt
                                 ,[updatedAt]              = @updatedAt
                                 ,[finishedAt]             = @finishedAt
@@ -251,6 +255,7 @@ namespace Data.Repositorys
                 return _missions.FirstOrDefault(m => m.guid == id);
             }
         }
+
         public Mission GetByAcsId(string acsMissionId)
         {
             lock (_lock)

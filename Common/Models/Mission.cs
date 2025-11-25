@@ -56,10 +56,11 @@ namespace Common.Models
         [JsonPropertyOrder(17)] public string elevatorId { get; set; }
         [JsonPropertyOrder(18)] public string sourceFloor { get; set; }
         [JsonPropertyOrder(19)] public string destinationFloor { get; set; }
-        [JsonPropertyOrder(20)] public string parameterJson { get; set; }
-        [JsonPropertyOrder(21)] public DateTime createdAt { get; set; }
-        [JsonPropertyOrder(22)] public DateTime? updatedAt { get; set; }
-        [JsonPropertyOrder(23)] public DateTime? finishedAt { get; set; }
+        [JsonPropertyOrder(20)] public string requestMode { get; set; }
+        [JsonPropertyOrder(21)] public string parameterJson { get; set; }
+        [JsonPropertyOrder(22)] public DateTime createdAt { get; set; }
+        [JsonPropertyOrder(23)] public DateTime? updatedAt { get; set; }
+        [JsonPropertyOrder(24)] public DateTime? finishedAt { get; set; }
 
         // 사람용 요약 (디버거/로그에서 보기 좋게)
         public override string ToString()
@@ -85,6 +86,7 @@ namespace Common.Models
                 $",elevatorId = {elevatorId,-5}" +
                 $",sourceFloor = {sourceFloor,-5}" +
                 $",destinationFloor = {destinationFloor,-5}" +
+                $",requestMode = {requestMode,-5}" +
                 $",parameterJson = {parameterJson,-5}" +
                 $",createdAt = {createdAt,-5}" +
                 $",updatedAt = {updatedAt,-5}" +

@@ -7,7 +7,7 @@ namespace ElevatorService.Mappings
 {
     public class MissionMapping
     {
-        public Mission AddRequest(Post_MissionDto apiAddRequestDto, string elevatorId, string sourceFloor, string destFloor)
+        public Mission AddRequest(Post_MissionDto apiAddRequestDto, string elevatorId, string sourceFloor, string destFloor,string requestMode)
         {
             var model = new Mission
             {
@@ -31,6 +31,7 @@ namespace ElevatorService.Mappings
                 elevatorId = elevatorId,
                 sourceFloor = sourceFloor,
                 destinationFloor = destFloor,
+                requestMode = requestMode,
                 parameterJson = JsonSerializer.Serialize(apiAddRequestDto.parameters),
                 createdAt = DateTime.Now,
             };

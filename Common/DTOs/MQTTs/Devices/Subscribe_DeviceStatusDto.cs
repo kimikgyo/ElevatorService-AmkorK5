@@ -2,7 +2,7 @@
 
 namespace Common.DTOs.MQTTs.Devices
 {
-    public class Subscribe_DeviceDto
+    public class Subscribe_DeviceStatusDto
     {
         [JsonPropertyOrder(1)] public string id { get; set; }
         [JsonPropertyOrder(2)] public string name { get; set; }

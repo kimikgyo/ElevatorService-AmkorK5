@@ -5,7 +5,7 @@ namespace ElevatorService.Mappings
 {
     public class ElevatorMapping()
     {
-        public Device MqttCreateElevator(Subscribe_DeviceDto mqttSubscribeDtoStatusDevice)
+        public Device MqttCreateElevator(Subscribe_DeviceStatusDto mqttSubscribeDtoStatusDevice)
         {
             var model = new Device
             {
@@ -18,7 +18,7 @@ namespace ElevatorService.Mappings
             return model;
         }
 
-        public void MqttUpdate(Device elevator, Subscribe_DeviceDto mqttSubscribeDtoStatusDevice)
+        public void MqttUpdate(Device elevator, Subscribe_DeviceStatusDto mqttSubscribeDtoStatusDevice)
         {
             elevator.id = mqttSubscribeDtoStatusDevice.id;
             elevator.name = mqttSubscribeDtoStatusDevice.name;

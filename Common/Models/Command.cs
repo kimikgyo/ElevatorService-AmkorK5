@@ -11,6 +11,7 @@ namespace Common.Models
 
     public enum CommandSubType
     {
+        MODECHANGE,
         ELEVATORENTER,
         ELEVATOREXIT,
         SOURCEFLOOR,

@@ -132,7 +132,9 @@ namespace ElevatorService.Controllers
                 var sourceFloor = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "SOURCEFLOOR").Select(s => s.value).FirstOrDefault();
                 var destinationFloor = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "DESTINATIONFLOOR").Select(s => s.value).FirstOrDefault();
                 var doorClose = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "ACTION").Select(s => s.value).FirstOrDefault();
-                mission = _mapping.Missions.AddRequest(addRequestDtoMission, condition.elevatorId, sourceFloor, destinationFloor);
+                var ModeChange = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "MODECHANGE").Select(s => s.value.ToUpper()).FirstOrDefault();
+
+                mission = _mapping.Missions.AddRequest(addRequestDtoMission, condition.elevatorId, sourceFloor, destinationFloor, ModeChange);
                 if (mission != null)
                 {
                     if (sourceFloor != null)
@@ -146,6 +148,10 @@ namespace ElevatorService.Controllers
                     else if (doorClose != null)
                     {
                         command = createDoorClose(mission);
+                    }
+                    else if(ModeChange !=null)
+                    {
+                        command = createModeChangeFloorCommand(mission);
                     }
                 }
             }
@@ -161,6 +167,32 @@ namespace ElevatorService.Controllers
             {
                 return NotFound();
             }
+        }
+        private Command createModeChangeFloorCommand(Mission mission)
+        {
+            var command = new Command
+            {
+                acsMissionId = mission.acsMissionId,
+                guid = Guid.NewGuid().ToString(),
+                name = "ModeChange",
+                service = mission.elevatorId,
+                type = nameof(Common.Models.CommandType.ACTION),
+                subType = nameof(CommandSubType.MODECHANGE),
+                sequence = 1,
+                state = nameof(CommandState.INIT),
+                assignedWorkerId = null,
+                createdAt = DateTime.Now,
+                updatedAt = null,
+                finishedAt = null,
+            };
+            var parameter = new Parameter
+            {
+                key = "Action",
+                value = $"{mission.requestMode}",
+            };
+            command.parameters.Add(parameter);
+            command.parameterJson = JsonSerializer.Serialize(command.parameters);
+            return command;
         }
 
         private Command createSourceFloorCommand(Mission mission)

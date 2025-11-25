@@ -1,6 +1,4 @@
 ﻿using Common.Models;
-using log4net;
-using System.Text.Json;
 
 namespace ElevatorService.Services
 {
@@ -62,22 +60,9 @@ namespace ElevatorService.Services
 
                 var runcommand = _repository.Commands.GetByRunCommands(commands).FirstOrDefault();
 
-                foreach (var command1 in commands)
-                {
-                    TestLogger.Info($"{nameof(postCommandControl)} ,command, MissionId = {command1.acsMissionId} , guid = {command1.guid}, name = {command1.name}, state = {command1.state}");
-                }
-
-                if (runcommand != null)
-                {
-                    TestLogger.Info($"{nameof(postCommandControl)} ,runcommand, MissionId = {runcommand.acsMissionId} , guid = {runcommand.guid}, name = {runcommand.name}, state = {runcommand.state}");
-                    continue;
-                }
                 var commandFailed_Request = commands.FirstOrDefault(m => (m.state == nameof(CommandState.FAILED)) || (m.state == nameof(CommandState.COMMANDREQUEST)));
                 if (commandFailed_Request != null)
                 {
-                    TestLogger.Info($"{nameof(postCommandControl)} ,commandFailed_Request, MissionId = {commandFailed_Request.acsMissionId}, guid = {commandFailed_Request.guid}," +
-                                   $", name = {commandFailed_Request.name}, state = {commandFailed_Request.state}");
-
                     command = commandFailed_Request;
                 }
                 else
@@ -211,11 +196,11 @@ namespace ElevatorService.Services
                     break;
             }
 
-            if(mission == null )
+            if (mission == null)
             {
                 mission = missions.FirstOrDefault();
             }
-            
+
             return mission;
         }
 
