@@ -13,7 +13,6 @@ namespace ElevatorService.Services
         private static readonly ILog EventLogger = LogManager.GetLogger("Event");
         private static readonly ILog TestLogger = LogManager.GetLogger("Test");
 
-
         public readonly IUnitOfWorkRepository _repository;
         public readonly IConfiguration _configuration;
         public readonly IUnitOfWorkMapping _mapping;
@@ -46,12 +45,9 @@ namespace ElevatorService.Services
         private async Task stratAsync()
         {
             Start();
-            bool getdataComplete = await getData.StartAsyc();
-            if (getdataComplete)
-            {
-                mQTT.Start();
-                elevatorService.Start();
-            }
+
+            mQTT.Start();
+            elevatorService.Start();
         }
 
         /// <summary>
@@ -63,16 +59,11 @@ namespace ElevatorService.Services
             await elevatorService.StopAsync();
             // StopAsync 내부에서 while 루프 빠져나오고 Task.WhenAll() 대기하도록 구현
 
-            // 2. 데이터 리로드
-            bool getDataComplete = await getData.ReloadAsyc();
-            if (getDataComplete)
-            {
-                //// 3. MQTT 다시 시작 (필요시)
-                //_mqtt.Start();
+            //// 3. MQTT 다시 시작 (필요시)
+            //_mqtt.Start();
 
-                // 4. 스케줄러 다시 시작
-                elevatorService.Start();
-            }
+            // 4. 스케줄러 다시 시작
+            elevatorService.Start();
         }
 
         private void Start()
@@ -102,33 +93,65 @@ namespace ElevatorService.Services
         }
 
         /// <summary>
-        /// 일정기간 Log 삭제
-        /// 파일 생성 날짜가 아니라 파일 이름 날짜로 삭제 후 폴더 삭제
+        /// 생성된 로그 폴더 구조(날짜 폴더 → JobScheduler → 파일)에 맞추어
+        /// 오래된 로그 디렉토리를 삭제하는 메소드.
+        ///
+        /// 로그 생성 구조 예:
+        /// \Log\ACS\2025-11-27\JobScheduler\_ApiEvent.log
         /// </summary>
-        /// <param name="searchDateTime"></param>
         private void PastLogDelete(DateTime searchDateTime)
         {
-            //Log 삭제
             try
             {
-                string Log_Directory = @"\Log\ACS\JobScheduler\";
+                // 1) 로그 루트 경로: \Log\ACS
+                // log4net 설정의 <file value="\Log\ACS\" /> 와 동일한 기준 경로
+                string logRoot = @"C:\Log\ACS";
 
-                foreach (var subDirPath in Directory.GetDirectories(Log_Directory))
+                // 루트 폴더가 없다면 삭제할 것도 없으므로 종료
+                if (!Directory.Exists(logRoot)) return;
+
+                // 2) 날짜 폴더 목록 가져오기
+                // 예: \Log\ACS\2025-11-27, \Log\ACS\2025-11-25 등
+                foreach (var dateDir in Directory.GetDirectories(logRoot))
                 {
-                    DirectoryInfo dirInfo = new DirectoryInfo(subDirPath);
-                    if (dirInfo.Exists)
+                    DirectoryInfo dirInfo = new DirectoryInfo(dateDir);
+
+                    // 3) 폴더명이 yyyy-MM-dd 형식인지 확인
+                    // 올바른 날짜 폴더만 삭제 검사 대상으로 삼는다.
+                    // 날짜 형식이 아니면 로그 폴더가 아니므로 스킵
+                    if (!DateTime.TryParseExact(dirInfo.Name, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime folderDate)) continue;
+
+                    // 4) 날짜 비교: searchDateTime 이전 날짜면 삭제 대상
+                    if (folderDate < searchDateTime)
                     {
-                        DateTime Infodate = DateTime.ParseExact(dirInfo.Name, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                        if (Infodate < searchDateTime)
+                        // 날짜 폴더 안의 JobScheduler 폴더 경로
+                        // 예: \Log\ACS\2025-11-27\JobScheduler
+                        string jobSchedulerPath = Path.Combine(dateDir, "ElevatorService");
+
+                        // 5) JobScheduler 폴더가 있으면 그 하위 모든 파일/폴더 삭제
+                        if (Directory.Exists(jobSchedulerPath))
                         {
-                            Directory.Delete(subDirPath, true); //하위 디렉토리와 파일까지 삭제
-                            EventLogger.Info("deleteSystemLogFile_Time()");
+                            // true = 하위 파일과 디렉토리 포함 전체 삭제
+                            Directory.Delete(jobSchedulerPath, true);
                         }
+
+                        // 6) 날짜 폴더가 비었으면 날짜 폴더도 삭제
+                        // 로그 파일만 삭제하면 날짜 폴더가 빈 폴더로 남을 수 있으므로 정리 필요
+                        bool isEmpty = Directory.GetFiles(dateDir).Length == 0 && Directory.GetDirectories(dateDir).Length == 0;
+
+                        if (isEmpty)
+                        {
+                            Directory.Delete(dateDir, true);
+                        }
+
+                        // 7) 로그 출력 (삭제되었다는 기록)
+                        EventLogger.Info($"deleteSystemLogFile_Time() : deleted {dirInfo.Name}");
                     }
                 }
             }
             catch (Exception ex)
             {
+                // 8) 예상치 못한 오류 기록
                 LogExceptionMessage(ex);
             }
         }
