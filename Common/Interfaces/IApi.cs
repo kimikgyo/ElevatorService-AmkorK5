@@ -11,6 +11,8 @@ namespace Common.Models
 
         Task<ApResponseDto> ElevatorPostCommandQueueAsync(object value);
 
+        Task<ApResponseDto> ElevatorDeleteCommandQueueAsync(string id);
+
         Task<ApResponseDto> PositionPatchAsync(string id, object value);
     }
 }

@@ -45,9 +45,12 @@ namespace ElevatorService.Services
         private async Task stratAsync()
         {
             Start();
-
-            mQTT.Start();
-            elevatorService.Start();
+            bool getdataComplete = await getData.StartAsyc();
+            if (getdataComplete)
+            {
+                mQTT.Start();
+                elevatorService.Start();
+            }
         }
 
         /// <summary>
@@ -58,12 +61,15 @@ namespace ElevatorService.Services
             // 1. 스케줄러 정지 (Task 종료될 때까지 대기)
             await elevatorService.StopAsync();
             // StopAsync 내부에서 while 루프 빠져나오고 Task.WhenAll() 대기하도록 구현
+            bool getdataComplete = await getData.StartAsyc();
+            if (getdataComplete)
+            {
+                //// 3. MQTT 다시 시작 (필요시)
+                //_mqtt.Start();
 
-            //// 3. MQTT 다시 시작 (필요시)
-            //_mqtt.Start();
-
-            // 4. 스케줄러 다시 시작
-            elevatorService.Start();
+                // 4. 스케줄러 다시 시작
+                elevatorService.Start();
+            }
         }
 
         private void Start()

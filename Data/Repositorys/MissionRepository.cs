@@ -51,6 +51,7 @@ namespace Data.Repositorys
                         ,[createdAt]             datetime         NULL
                         ,[updatedAt]             datetime         NULL
                         ,[finishedAt]            datetime         NULL
+                        ,[terminationType]        NVARCHAR(64)     NULL
                     );
                 END;
             ";
@@ -110,6 +111,7 @@ namespace Data.Repositorys
                                       ,[createdAt]
                                       ,[updatedAt]
                                       ,[finishedAt]
+                                      ,[terminationType]
                                    )
                                   values
                                   (
@@ -136,6 +138,7 @@ namespace Data.Repositorys
                                         ,@createdAt
                                         ,@updatedAt
                                         ,@finishedAt
+                                        ,@terminationType
                                   );";
                     //TimeOut 시간을 60초로 연장 [기본30초]
                     //con.Execute(INSERT_SQL, param: add, commandTimeout: 60);
@@ -177,6 +180,8 @@ namespace Data.Repositorys
                                 ,[createdAt]              = @createdAt
                                 ,[updatedAt]              = @updatedAt
                                 ,[finishedAt]             = @finishedAt
+                                ,[terminationType]        = @terminationType
+
                             WHERE [guid] = @guid";
                     //TimeOut 시간을 60초로 연장 [기본30초]
                     //con.Execute(UPDATE_SQL, param: update, commandTimeout: 60);
@@ -248,15 +253,7 @@ namespace Data.Repositorys
             }
         }
 
-        public Mission GetById(string id)
-        {
-            lock (_lock)
-            {
-                return _missions.FirstOrDefault(m => m.guid == id);
-            }
-        }
-
-        public Mission GetByAcsId(string acsMissionId)
+        public Mission GetByAcsMissionId(string acsMissionId)
         {
             lock (_lock)
             {

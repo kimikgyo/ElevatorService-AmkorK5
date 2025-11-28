@@ -149,7 +149,7 @@ namespace ElevatorService.Controllers
                     {
                         command = createDoorClose(mission);
                     }
-                    else if(ModeChange !=null)
+                    else if (ModeChange != null)
                     {
                         command = createModeChangeFloorCommand(mission);
                     }
@@ -168,6 +168,52 @@ namespace ElevatorService.Controllers
                 return NotFound();
             }
         }
+
+        //// PUT api/<MissionController>/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
+
+        // DELETE api/<MissionController>/5
+        [HttpDelete("{id}")]
+        public ActionResult Delete(string id)
+        {
+            var mission = _repository.Missions.GetByAcsMissionId(id);
+            if (mission != null)
+            {
+                mission.terminationType = nameof(TerminateType.CANCEL);
+                _repository.Missions.Update(mission);
+                return Ok();
+            }
+            else
+            {
+                return NotFound("DeleteComplete");
+            }
+        }
+
+        private bool IsInvalid(string value)
+        {
+            return string.IsNullOrWhiteSpace(value)
+                || value.ToUpper() == "NULL"
+                || value.ToUpper() == "STRING"
+                || value.ToUpper() == "";
+        }
+
+        private (string elevatorId, string massage) ConditionAddMission(Post_MissionDto RequestDto)
+        {
+            string massage = null;
+            string elevatorId = null;
+            string sourceFloor = null;
+            string destFloor = null;
+            var missionid = _repository.Missions.GetByAcsMissionId(RequestDto.guid);
+            if (missionid != null) massage = "Check missionGuid";
+
+            elevatorId = RequestDto.parameters.Where(k => k.key.ToUpper() == "ELEVATORID").Select(s => s.value).FirstOrDefault();
+
+            return (elevatorId, massage);
+        }
+
         private Command createModeChangeFloorCommand(Mission mission)
         {
             var command = new Command
@@ -276,39 +322,5 @@ namespace ElevatorService.Controllers
 
             return command;
         }
-
-        private (string elevatorId, string massage) ConditionAddMission(Post_MissionDto RequestDto)
-        {
-            string massage = null;
-            string elevatorId = null;
-            string sourceFloor = null;
-            string destFloor = null;
-            var missionid = _repository.Missions.GetByAcsId(RequestDto.guid);
-            if (missionid != null) massage = "Check missionGuid";
-
-            elevatorId = RequestDto.parameters.Where(k => k.key.ToUpper() == "ELEVATORID").Select(s => s.value).FirstOrDefault();
-
-            return (elevatorId, massage);
-        }
-
-        //// PUT api/<MissionController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        private bool IsInvalid(string value)
-        {
-            return string.IsNullOrWhiteSpace(value)
-                || value.ToUpper() == "NULL"
-                || value.ToUpper() == "STRING"
-                || value.ToUpper() == "";
-        }
-
-        //// DELETE api/<MissionController>/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

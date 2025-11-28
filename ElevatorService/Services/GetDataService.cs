@@ -40,47 +40,6 @@ namespace ElevatorService.Services
                 {
                     ApiClient();
                     Complete = true;
-                    //foreach (var serviceApi in _repository.ServiceApis.GetAll())
-                    //{
-                    //    if (serviceApi.type == "Resource")
-                    //    {
-                    //        var Maps = await serviceApi.Api.GetResourceMap();
-                    //        //var Positions = await serviceApi.Api.GetResourcePosition();
-
-                    //        if (Maps == null)
-                    //        {
-                    //            _eventlog.Info($"{nameof(Maps)}GetDataFail");
-                    //            break;
-                    //        }
-                    //        //else if (Positions == null)
-                    //        //{
-                    //        //    _eventlog.Info($"{nameof(Positions)}GetDataFail");
-                    //        //    break;
-                    //        //}
-                    //        else
-                    //        {
-                    //            foreach (var getmap in Maps)
-                    //            {
-                    //                var map = _mapping.Maps.ApiGetResourceResponse(getmap);
-                    //                _repository.Maps.Add(map);
-                    //            }
-
-                    //            //foreach (var getPosition in Positions)
-                    //            //{
-                    //            //    var position = _mapping.Positions.ApiGetResourceResponse(getPosition);
-                    //            //    _repository.Positions.Add(position);
-                    //            //}
-
-                    //            Resource = true;
-                    //        }
-                    //    }
-                    //}
-                    //if (Resource && Template)
-                    //{
-                    //    Complete = true;
-                    //    ConfigData.SubscribeTopics = mqttTopicSubscribes;
-                    //    _eventlog.Info($"GetData{nameof(Complete)}");
-                    //}
                     await Task.Delay(500);
                 }
                 catch (Exception ex)
@@ -106,36 +65,6 @@ namespace ElevatorService.Services
                 try
                 {
                     ApiClient();
-                    foreach (var serviceApi in _repository.ServiceApis.GetAll())
-                    {
-                        if (serviceApi.type == "Resource")
-                        {
-                            var getReloadMaps = await serviceApi.Api.GetResourceMap();
-                            //var getReloadPositions = await serviceApi.Api.GetResourcePosition();
-                            if (getReloadMaps == null)
-                            {
-                                _eventlog.Info($"{nameof(getReloadMaps)}GetDataFail");
-                                break;
-                            }
-                            //else if (getReloadPositions == null)
-                            //{
-                            //    _eventlog.Info($"{nameof(getReloadPositions)}GetDataFail");
-                            //    break;
-                            //}
-                            else
-                            {
-                                ReloadMap(getReloadMaps);
-                                //ReloadPosition(getReloadPositions);
-                                Resource = true;
-                            }
-                        }
-                    }
-                    if (Resource && Template)
-                    {
-                        Complete = true;
-                        ConfigData.SubscribeTopics = mqttTopicSubscribes;
-                        _eventlog.Info($"GetData{nameof(Complete)}");
-                    }
                     await Task.Delay(500);
                 }
                 catch (Exception ex)

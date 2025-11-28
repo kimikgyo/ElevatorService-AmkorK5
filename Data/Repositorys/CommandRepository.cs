@@ -62,7 +62,7 @@ namespace Data.Repositorys
             {
                 foreach (var data in con.Query<Command>("SELECT * FROM [Command]"))
                 {
-                    if(data.parameterJson !=null)data.parameters = JsonSerializer.Deserialize<List<Parameter>>(data.parameterJson);
+                    if (data.parameterJson != null) data.parameters = JsonSerializer.Deserialize<List<Parameter>>(data.parameterJson);
 
                     _commands.Add(data);
 
@@ -187,18 +187,12 @@ namespace Data.Repositorys
                 return _commands.ToList();
             }
         }
+
         public List<Command> GetByAcsMissionId(string acsmissionId)
         {
             lock (_lock)
             {
                 return _commands.Where(m => m.acsMissionId == acsmissionId).ToList();
-            }
-        }
-        public List<Command> GetByMissionId(string missionId)
-        {
-            lock (_lock)
-            {
-                return _commands.Where(m => m.guid == missionId).ToList();
             }
         }
 
@@ -217,12 +211,13 @@ namespace Data.Repositorys
                 return _commands.FirstOrDefault(m => m.guid == id);
             }
         }
+
         public List<Command> GetByRunCommands(List<Command> commands)
         {
             lock (_lock)
             {
-                return commands.Where(m => (m.state == nameof(CommandState.PENDING)) 
-                                  || (m.state == nameof(CommandState.EXECUTING)) 
+                return commands.Where(m => (m.state == nameof(CommandState.PENDING))
+                                  || (m.state == nameof(CommandState.EXECUTING))
                                   || (m.state == nameof(CommandState.COMMANDREQUESTCOMPLETED))).ToList();
             }
         }

@@ -2,6 +2,12 @@
 
 namespace Common.Models
 {
+    public enum Elevator1_MODE
+    {
+        AGVMODE,
+        NOTAGVMODE
+    }
+
     public enum Elevator1_State
     {
         DISCONNECT,

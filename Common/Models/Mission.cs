@@ -34,6 +34,12 @@ namespace Common.Models
     {
     }
 
+    public enum TerminateType
+    {
+        CANCEL,
+        ABORT
+    }
+
     public class Mission
     {
         [JsonPropertyOrder(1)] public string orderId { get; set; }
@@ -61,6 +67,7 @@ namespace Common.Models
         [JsonPropertyOrder(22)] public DateTime createdAt { get; set; }
         [JsonPropertyOrder(23)] public DateTime? updatedAt { get; set; }
         [JsonPropertyOrder(24)] public DateTime? finishedAt { get; set; }
+        [JsonPropertyOrder(25)] public string terminationType { get; set; }
 
         // 사람용 요약 (디버거/로그에서 보기 좋게)
         public override string ToString()
@@ -90,7 +97,8 @@ namespace Common.Models
                 $",parameterJson = {parameterJson,-5}" +
                 $",createdAt = {createdAt,-5}" +
                 $",updatedAt = {updatedAt,-5}" +
-                $",finishedAt = {finishedAt,-5}";
+                $",finishedAt = {finishedAt,-5}"+
+                $",terminationType = {terminationType,-5}";
         }
 
         // 기계용 JSON (전송/저장에만 사용)

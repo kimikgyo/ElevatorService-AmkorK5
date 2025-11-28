@@ -8,6 +8,24 @@ namespace ElevatorService.Services
         {
             commandWaitChange();
             postCommandControl();
+            cancelControl();
+        }
+
+        private void cancelControl()
+        {
+            var cancelmissions = _repository.Missions.GetAll().Where(m => m.terminationType == nameof(TerminateType.CANCEL)).ToList();
+            if (cancelmissions == null || cancelmissions.Count() == 0) return;
+
+            foreach (var cancelmission in cancelmissions)
+            {
+                var commands = _repository.Commands.GetByAcsMissionId(cancelmission.acsMissionId);
+                if (commands == null || commands.Count == 0) continue;
+
+                foreach (var command in commands)
+                {
+                    deleteCommand(command);
+                }
+            }
         }
 
         private void commandWaitChange()
@@ -47,9 +65,7 @@ namespace ElevatorService.Services
             //var commands = _repository.Commands.GetAll();
             //if (commands == null || commands.Count == 0) return;
 
-            var elevator = _repository.Devices.GetAll().FirstOrDefault(r => r.state != nameof(Elevator1_State.DISCONNECT));
-            if (elevator == null) return;
-
+           
             var pandingMissions = missions.Where(r => (r.state == nameof(MissionState.PENDING)) || (r.state == nameof(MissionState.EXECUTING))).OrderBy(r => r.createdAt).ToList();
             if (pandingMissions == null || pandingMissions.Count == 0) return;
 
@@ -242,6 +258,29 @@ namespace ElevatorService.Services
                 updateStateCommand(command, nameof(CommandState.COMMANDREQUESTCOMPLETED), true);
             }
             return CommandRequst;
+        }
+
+        private void deleteCommand(Command command)
+        {
+            var elevaotrApi = _repository.ServiceApis.GetAll().FirstOrDefault(r => r.type == nameof(Service.NO1));
+            if (elevaotrApi != null)
+            {
+                var mapping_Command = _mapping.Commands.ApiRequestDtoPostCommand(command);
+                if (mapping_Command != null)
+                {
+                    //[조건4] Service 로 Api Mission 전송을 한다.
+                    var postCommand = elevaotrApi.Api.ElevatorDeleteCommandQueueAsync(mapping_Command.guid).Result;
+                    if (postCommand != null)
+                    {
+                        //[조건5] 상태코드 200~300 까지는 완료 처리
+                        if (postCommand.statusCode >= 200 && postCommand.statusCode < 300)
+                        {
+                            EventLogger.Info($"DeleteMission Success = Service = {nameof(Service.NO1)}, Message = {postCommand.statusText}, CommandName = {command.name}, CommandId = {command.guid}, AssignedWorkerId = {command.assignedWorkerId}");
+                        }
+                        else EventLogger.Info($"DeleteMission Failed = Service = {nameof(Service.NO1)}, Message = {postCommand.message}, CommandName = {command.name}, CommandId = {command.guid}, AssignedWorkerId = {command.assignedWorkerId}");
+                    }
+                }
+            }
         }
     }
 }

@@ -69,6 +69,7 @@ namespace ElevatorService.Services
                 {
                     try
                     {
+
                         Schduler();
                         StatusChangeControl();
                         await Task.Delay(300);
