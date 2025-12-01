@@ -5,9 +5,9 @@ namespace ElevatorService.Mappings
 {
     public class CommandMapping
     {
-        public Request_CommandDto ApiRequestDtoPostCommand(Command model)
+        public Request_CommandDto Request(Command model)
         {
-            var apiRequest = new Request_CommandDto
+            var Request = new Request_CommandDto
             {
                 guid = model.guid,
                 name = model.name,
@@ -20,7 +20,7 @@ namespace ElevatorService.Mappings
                 parameters = model.parameters,
             };
 
-            return apiRequest;
+            return Request;
         }
     }
 }

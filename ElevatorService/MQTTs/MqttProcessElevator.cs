@@ -39,12 +39,12 @@ namespace ElevatorService.MQTTs
                             var status = JsonSerializer.Deserialize<Subscribe_DeviceStatusDto>(subscribe.Payload!);
                             if (elevator == null)
                             {
-                                var create = _mapping.Elevators.MqttCreateElevator(status);
+                                var create = _mapping.Elevators.Subscribe_Create(status);
                                 _repository.Devices.Add(create);
                             }
                             else
                             {
-                                _mapping.Elevators.MqttUpdate(elevator, status);
+                                _mapping.Elevators.Subscribe_Update_State(elevator, status);
                                 _repository.Devices.Update(elevator);
                             }
 

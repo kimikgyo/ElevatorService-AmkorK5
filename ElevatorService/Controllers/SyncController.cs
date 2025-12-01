@@ -26,7 +26,7 @@ namespace ElevatorService.Controllers
 
         // GET api/<SyncController>/5
         //[HttpGet("{id}")]
-        //public string Get(int id)
+        //public string Response(int id)
         //{
         //    return "value";
         //}

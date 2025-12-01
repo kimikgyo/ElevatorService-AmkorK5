@@ -134,7 +134,7 @@ namespace ElevatorService.Controllers
                 var doorClose = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "ACTION").Select(s => s.value).FirstOrDefault();
                 var ModeChange = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "MODECHANGE").Select(s => s.value.ToUpper()).FirstOrDefault();
 
-                mission = _mapping.Missions.AddRequest(addRequestDtoMission, condition.elevatorId, sourceFloor, destinationFloor, ModeChange);
+                mission = _mapping.Missions.Post(addRequestDtoMission, condition.elevatorId, sourceFloor, destinationFloor, ModeChange);
                 if (mission != null)
                 {
                     if (sourceFloor != null)
@@ -160,7 +160,7 @@ namespace ElevatorService.Controllers
             {
                 _repository.Commands.Add(command);     //ElevatorCall
                 _repository.Missions.Add(mission);
-                _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.MqttPublish(mission));
+                _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.Publish(mission));
                 return Ok(command);
             }
             else

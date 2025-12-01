@@ -7,14 +7,17 @@ namespace ElevatorService.Mappings
 {
     public class MissionMapping
     {
-        public Mission AddRequest(Post_MissionDto apiAddRequestDto, string elevatorId, string sourceFloor, string destFloor,string requestMode)
+        public Mission Post(Post_MissionDto apiAddRequestDto, string elevatorId, string sourceFloor, string destFloor, string requestMode)
         {
             var model = new Mission
             {
+                guid = Guid.NewGuid().ToString(),
+                state = nameof(MissionState.PENDING),
+                createdAt = DateTime.Now,
+
                 orderId = apiAddRequestDto.orderId,
                 jobId = apiAddRequestDto.jobId,
                 acsMissionId = apiAddRequestDto.guid,
-                guid = Guid.NewGuid().ToString(),
                 name = apiAddRequestDto.name,
                 carrierId = apiAddRequestDto.carrierId,
                 service = apiAddRequestDto.service,
@@ -25,7 +28,6 @@ namespace ElevatorService.Mappings
                 isLocked = apiAddRequestDto.isLocked,
                 sequenceChangeCount = apiAddRequestDto.sequenceChangeCount,
                 retryCount = apiAddRequestDto.retryCount,
-                state = nameof(MissionState.PENDING),
                 specifiedWorkerId = apiAddRequestDto.specifiedWorkerId,
                 assignedWorkerId = apiAddRequestDto.assignedWorkerId,
                 elevatorId = elevatorId,
@@ -33,18 +35,23 @@ namespace ElevatorService.Mappings
                 destinationFloor = destFloor,
                 requestMode = requestMode,
                 parameterJson = JsonSerializer.Serialize(apiAddRequestDto.parameters),
-                createdAt = DateTime.Now,
             };
             return model;
         }
 
-        public Get_MissionDto Response(Mission model)
+        public Get_MissionDto Get(Mission model)
         {
             var response = new Get_MissionDto()
             {
+                guid = model.guid,
+                state = model.state,
+                createdAt = model.createdAt,
+                updatedAt = model.updatedAt,
+                finishedAt = model.finishedAt,
+
                 orderId = model.orderId,
                 jobId = model.jobId,
-                guid = model.guid,
+                acsMissionId = model.acsMissionId,
                 carrierId = model.carrierId,
                 service = model.service,
                 type = model.type,
@@ -54,25 +61,26 @@ namespace ElevatorService.Mappings
                 isLocked = model.isLocked,
                 sequenceChangeCount = model.sequenceChangeCount,
                 retryCount = model.retryCount,
-                state = model.state,
                 specifiedWorkerId = model.specifiedWorkerId,
                 assignedWorkerId = model.assignedWorkerId,
-                createdAt = model.createdAt,
-                updatedAt = model.updatedAt,
-                finishedAt = model.finishedAt,
             };
 
             return response;
         }
 
-        public Publish_MissionDto MqttPublish(Mission model)
+        public Publish_MissionDto Publish(Mission model)
         {
             var publish = new Publish_MissionDto()
             {
+                guid = model.guid,
+                state = model.state,
+                createdAt = model.createdAt,
+                updatedAt = model.updatedAt,
+                finishedAt = model.finishedAt,
+
                 orderId = model.orderId,
                 jobId = model.jobId,
                 acsMissionId = model.acsMissionId,
-                guid = model.guid,
                 name = model.name,
                 carrierId = model.carrierId,
                 service = model.service,
@@ -83,7 +91,6 @@ namespace ElevatorService.Mappings
                 isLocked = model.isLocked,
                 sequenceChangeCount = model.sequenceChangeCount,
                 retryCount = model.retryCount,
-                state = model.state,
                 specifiedWorkerId = model.specifiedWorkerId,
                 assignedWorkerId = model.assignedWorkerId,
             };

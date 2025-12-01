@@ -6,7 +6,7 @@ namespace ElevatorService.Mappings
 {
     public class PositionMapping
     {
-        public Position ApiGetResourceResponse(Response_PositionDto model)
+        public Position Response(Response_PositionDto model)
         {
             var response = new Position
             {
@@ -30,7 +30,7 @@ namespace ElevatorService.Mappings
             return response;
         }
 
-        public Publish_PositionDto MqttPublish(Position model)
+        public Publish_PositionDto Publish(Position model)
         {
             var publish = new Publish_PositionDto()
             {

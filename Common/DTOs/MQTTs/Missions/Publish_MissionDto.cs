@@ -5,10 +5,17 @@ namespace Common.DTOs.MQTTs.Missions
 {
     public class Publish_MissionDto
     {
-        [JsonPropertyOrder(1)] public string orderId { get; set; }
+        //미션 관리 필요 항목
+        [JsonPropertyOrder(1)] public string guid { get; set; }
+        [JsonPropertyOrder(2)] public string state { get; set; }
+        [JsonPropertyOrder(3)] public DateTime createdAt { get; set; }
+        [JsonPropertyOrder(4)] public DateTime? updatedAt { get; set; }
+        [JsonPropertyOrder(5)] public DateTime? finishedAt { get; set; }
+
+        //미션 전달 받는항목
+        [JsonPropertyOrder(6)] public string orderId { get; set; }
         [JsonPropertyOrder(2)] public string jobId { get; set; }
         [JsonPropertyOrder(4)] public string acsMissionId { get; set; }
-        [JsonPropertyOrder(5)] public string guid { get; set; }
         [JsonPropertyOrder(6)] public string carrierId { get; set; }              // 자재 ID (nullable)
         [JsonPropertyOrder(7)] public string name { get; set; }
         [JsonPropertyOrder(8)] public string service { get; set; }
@@ -19,7 +26,6 @@ namespace Common.DTOs.MQTTs.Missions
         [JsonPropertyOrder(13)] public bool isLocked { get; set; }                   // 취소 불가
         [JsonPropertyOrder(14)] public int sequenceChangeCount { get; set; } = 0;   // 시퀀스가 변경된 누적 횟수 예: 재정렬이 3번 발생했다면 3
         [JsonPropertyOrder(15)] public int retryCount { get; set; } = 0;            // 명령 실패 시 재시도한 횟수 (기본값은 0)
-        [JsonPropertyOrder(16)] public string state { get; set; }
         [JsonPropertyOrder(17)] public string specifiedWorkerId { get; set; }            //order 지정된 Worker
         [JsonPropertyOrder(18)] public string assignedWorkerId { get; set; }             //할당된 Worker
         [JsonPropertyOrder(19)] public List<Parameter> parameters { get; set; }
@@ -77,10 +83,14 @@ namespace Common.DTOs.MQTTs.Missions
 
             return
 
+                $",guid = {guid,-5}" +
+                $",state = {state,-5}" +
+                $",createdAt = {createdAt,-5}" +
+                $",updatedAt = {updatedAt,-5}" +
+                $",finishedAt = {finishedAt,-5}" +
                 $" orderId = {orderId,-5}" +
                 $",jobId = {jobId,-5}" +
                 $",acsMissionId = {acsMissionId,-5}" +
-                $",guid = {guid,-5}" +
                 $",carrierId = {carrierId,-5}" +
                 $",name = {name,-5}" +
                 $",service = {service,-5}" +
@@ -91,7 +101,6 @@ namespace Common.DTOs.MQTTs.Missions
                 $",isLocked = {isLocked,-5}" +
                 $",sequenceChangeCount = {sequenceChangeCount,-5}" +
                 $",retryCount = {retryCount,-5}" +
-                $",state = {state,-5}" +
                 $",specifiedWorkerId = {specifiedWorkerId,-5}" +
                 $",assignedWorkerId = {assignedWorkerId,-5}" +
                 $",parameters = {parametersStr,-5}" +

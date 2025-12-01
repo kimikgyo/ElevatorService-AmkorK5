@@ -28,10 +28,19 @@ namespace Data.Repositorys
                 BEGIN
                     CREATE TABLE dbo.[Mission]
                     (
-                         [orderId]               NVARCHAR(64)     NULL
+                         [guid]                  NVARCHAR(64)     NULL
+                        ,[state]                 NVARCHAR(64)     NULL
+                        ,[createdAt]             datetime         NULL
+                        ,[updatedAt]             datetime         NULL
+                        ,[finishedAt]            datetime         NULL
+                        ,[elevatorId]            NVARCHAR(64)     NULL
+                        ,[sourceFloor]           NVARCHAR(64)     NULL
+                        ,[destinationFloor]      NVARCHAR(64)     NULL
+                        ,[requestMode]           NVARCHAR(64)     NULL
+                        ,[terminationType]       NVARCHAR(64)     NULL
+                        ,[orderId]               NVARCHAR(64)     NULL
                         ,[jobId]                 NVARCHAR(64)     NULL
                         ,[acsMissionId]          NVARCHAR(64)     NULL
-                        ,[guid]                  NVARCHAR(64)     NULL
                         ,[carrierId]             NVARCHAR(64)     NULL
                         ,[service]               NVARCHAR(64)     NULL
                         ,[type]                  NVARCHAR(64)     NULL
@@ -41,17 +50,8 @@ namespace Data.Repositorys
                         ,[isLocked]              int              NULL
                         ,[sequenceChangeCount]   int              NULL
                         ,[retryCount]            int              NULL
-                        ,[state]                 NVARCHAR(64)     NULL
                         ,[specifiedWorkerId]     NVARCHAR(64)     NULL
                         ,[assignedWorkerId]      NVARCHAR(64)     NULL
-                        ,[elevatorId]            NVARCHAR(64)     NULL
-                        ,[sourceFloor]           NVARCHAR(64)     NULL
-                        ,[destinationFloor]      NVARCHAR(64)     NULL
-                        ,[requestMode]           NVARCHAR(64)     NULL
-                        ,[createdAt]             datetime         NULL
-                        ,[updatedAt]             datetime         NULL
-                        ,[finishedAt]            datetime         NULL
-                        ,[terminationType]        NVARCHAR(64)     NULL
                     );
                 END;
             ";
@@ -88,10 +88,19 @@ namespace Data.Repositorys
                     const string INSERT_SQL = @"
                             INSERT INTO [Mission]
                                  (
-                                       [orderId]
+                                       [guid]
+                                      ,[state]
+                                      ,[elevatorId]
+                                      ,[sourceFloor]
+                                      ,[destinationFloor]
+                                      ,[requestMode]
+                                      ,[createdAt]
+                                      ,[updatedAt]
+                                      ,[finishedAt]
+                                      ,[terminationType]
+                                      ,[orderId]
                                       ,[jobId]
                                       ,[acsMissionId]
-                                      ,[guid]
                                       ,[carrierId]
                                       ,[service]
                                       ,[type]
@@ -101,24 +110,24 @@ namespace Data.Repositorys
                                       ,[isLocked]
                                       ,[sequenceChangeCount]
                                       ,[retryCount]
-                                      ,[state]
                                       ,[specifiedWorkerId]
                                       ,[assignedWorkerId]
-                                      ,[elevatorId]
-                                      ,[sourceFloor]
-                                      ,[destinationFloor]
-                                      ,[requestMode]
-                                      ,[createdAt]
-                                      ,[updatedAt]
-                                      ,[finishedAt]
-                                      ,[terminationType]
                                    )
                                   values
                                   (
-                                         @orderId
+                                         @guid
+                                        ,@state
+                                        ,@elevatorId
+                                        ,@sourceFloor
+                                        ,@destinationFloor
+                                        ,@requestMode
+                                        ,@createdAt
+                                        ,@updatedAt
+                                        ,@finishedAt
+                                        ,@terminationType
+                                        ,@orderId
                                         ,@jobId
                                         ,@acsMissionId
-                                        ,@guid
                                         ,@carrierId
                                         ,@service
                                         ,@type
@@ -128,17 +137,8 @@ namespace Data.Repositorys
                                         ,@isLocked
                                         ,@sequenceChangeCount
                                         ,@retryCount
-                                        ,@state
                                         ,@specifiedWorkerId
                                         ,@assignedWorkerId
-                                        ,@elevatorId
-                                        ,@sourceFloor
-                                        ,@destinationFloor
-                                        ,@requestMode
-                                        ,@createdAt
-                                        ,@updatedAt
-                                        ,@finishedAt
-                                        ,@terminationType
                                   );";
                     //TimeOut 시간을 60초로 연장 [기본30초]
                     //con.Execute(INSERT_SQL, param: add, commandTimeout: 60);
@@ -158,7 +158,16 @@ namespace Data.Repositorys
                     const string UPDATE_SQL = @"
                             UPDATE [Mission]
                             SET
-                                 [orderId]                = @orderId
+                                 [state]                  = @state
+                                ,[elevatorId]             = @elevatorId
+                                ,[sourceFloor]            = @sourceFloor
+                                ,[destinationFloor]       = @destinationFloor
+                                ,[requestMode]            = @requestMode
+                                ,[createdAt]              = @createdAt
+                                ,[updatedAt]              = @updatedAt
+                                ,[finishedAt]             = @finishedAt
+                                ,[terminationType]        = @terminationType
+                                ,[orderId]                = @orderId
                                 ,[jobId]                  = @jobId
                                 ,[acsMissionId]           = @acsMissionId
                                 ,[carrierId]              = @carrierId
@@ -170,17 +179,8 @@ namespace Data.Repositorys
                                 ,[isLocked]               = @isLocked
                                 ,[sequenceChangeCount]    = @sequenceChangeCount
                                 ,[retryCount]             = @retryCount
-                                ,[state]                  = @state
                                 ,[specifiedWorkerId]      = @specifiedWorkerId
                                 ,[assignedWorkerId]       = @assignedWorkerId
-                                ,[elevatorId]             = @elevatorId
-                                ,[sourceFloor]            = @sourceFloor
-                                ,[destinationFloor]       = @destinationFloor
-                                ,[requestMode]            = @requestMode
-                                ,[createdAt]              = @createdAt
-                                ,[updatedAt]              = @updatedAt
-                                ,[finishedAt]             = @finishedAt
-                                ,[terminationType]        = @terminationType
 
                             WHERE [guid] = @guid";
                     //TimeOut 시간을 60초로 연장 [기본30초]

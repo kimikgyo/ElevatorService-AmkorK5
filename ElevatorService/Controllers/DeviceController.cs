@@ -41,7 +41,7 @@ namespace ElevatorService.Controllers
 
         // GET api/<ValuesController>/5
         //[HttpGet("{id}")]
-        //public string Get(int id)
+        //public string Response(int id)
         //{
         //    return "value";
         //}

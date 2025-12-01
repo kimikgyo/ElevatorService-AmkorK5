@@ -83,7 +83,7 @@ namespace ElevatorService.Services
             //update Add
             foreach (var dtoResourceMap in dtoResourceMaps)
             {
-                Reload.Add(_mapping.Maps.ApiGetResourceResponse(dtoResourceMap));
+                Reload.Add(_mapping.Maps.Response(dtoResourceMap));
             }
 
             var ReloadId = Reload.Select(x => x.id).ToList();
@@ -125,7 +125,7 @@ namespace ElevatorService.Services
         //    //update Add
         //    foreach (var dtoResourcePosition in dtoResourcePositions)
         //    {
-        //        Reload.Add(_mapping.Positions.ApiGetResourceResponse(dtoResourcePosition));
+        //        Reload.Add(_mapping.Positions.Response(dtoResourcePosition));
         //    }
 
         //    var ReloadId = Reload.Select(x => x.id);

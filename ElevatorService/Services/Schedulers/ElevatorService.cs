@@ -141,7 +141,7 @@ namespace ElevatorService.Services
 
                 _repository.Missions.Update(mission);
                 // if (historyAdd) _repository.MissionHistorys.Add(mission);
-                _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.MqttPublish(mission));
+                _mqttQueue.MqttPublishMessage(TopicType.mission, TopicSubType.status, _mapping.Missions.Publish(mission));
             }
         }
 
@@ -178,7 +178,7 @@ namespace ElevatorService.Services
 
                 _repository.Commands.Update(command);
                 //if (historyAdd) _repository.Commands.Add(command);
-                //_mqttQueue.MqttPublishMessage(TopicType., TopicSubType.status, _mapping.Missions.MqttPublish(mission));
+                //_mqttQueue.MqttPublishMessage(TopicType., TopicSubType.status, _mapping.Missions.Publish(mission));
             }
         }
     }

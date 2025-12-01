@@ -233,7 +233,7 @@ namespace ElevatorService.Services
                     if (elevaotrApi != null)
                     {
                         //[조건3] API 형식에 맞추어서 Mapping 을 한다.
-                        var mapping_Command = _mapping.Commands.ApiRequestDtoPostCommand(command);
+                        var mapping_Command = _mapping.Commands.Request(command);
                         if (mapping_Command != null)
                         {
                             //[조건4] Service 로 Api Mission 전송을 한다.
@@ -265,7 +265,7 @@ namespace ElevatorService.Services
             var elevaotrApi = _repository.ServiceApis.GetAll().FirstOrDefault(r => r.type == nameof(Service.NO1));
             if (elevaotrApi != null)
             {
-                var mapping_Command = _mapping.Commands.ApiRequestDtoPostCommand(command);
+                var mapping_Command = _mapping.Commands.Request(command);
                 if (mapping_Command != null)
                 {
                     //[조건4] Service 로 Api Mission 전송을 한다.
