@@ -55,7 +55,7 @@ try
     //Kestrel 설정을 appsettings.json에서 읽어오도록 설정
     builder.WebHost.ConfigureKestrel(options =>
     {
-        options.ListenAnyIP(5189); // 압도적으로 가장 편한 방법 ★
+        options.ListenAnyIP(5190); // 압도적으로 가장 편한 방법 ★
     });
 
     #region 의존성 주입 [DI설명 및 설정]
