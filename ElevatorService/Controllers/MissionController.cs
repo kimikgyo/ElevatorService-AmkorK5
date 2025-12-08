@@ -131,7 +131,7 @@ namespace ElevatorService.Controllers
                 var destinationFloor = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "DESTINATIONFLOOR").Select(s => s.value).FirstOrDefault();
                 var doorClose = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "ACTION").Select(s => s.value).FirstOrDefault();
                 var ModeChange = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "MODECHANGE").Select(s => s.value.ToUpper()).FirstOrDefault();
-                var elevatorId = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "LINkEDFACILITY").Select(s => s.value).FirstOrDefault();
+                var elevatorId = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "LINKEDFACILITY").Select(s => s.value).FirstOrDefault();
                 if (elevatorId != null)
                 {
                     mission = _mapping.Missions.Post(addRequestDtoMission, elevatorId, sourceFloor, destinationFloor, ModeChange);
@@ -214,11 +214,9 @@ namespace ElevatorService.Controllers
             var ModeChange = post_Mission.parameters.Where(k => k.key.ToUpper() == "MODECHANGE").Select(s => s.value.ToUpper()).FirstOrDefault();
             var elevatorId = post_Mission.parameters.Where(k => k.key.ToUpper() == "LINkEDFACILITY").Select(s => s.value).FirstOrDefault();
 
-            if (IsInvalid(sourceFloor)) massage = "SourceFloor Value IsNull";
-            else if (IsInvalid(destinationFloor)) massage = "destinationFloor Value IsNull";
-            else if (IsInvalid(doorClose)) massage = "doorClose Value IsNull";
-            else if (IsInvalid(ModeChange)) massage = "ModeChange Value IsNull";
-            else if (IsInvalid(elevatorId)) massage = "elevatorId Value IsNull";
+            if (IsInvalid(sourceFloor) && IsInvalid(destinationFloor) && IsInvalid(doorClose)
+                    && IsInvalid(ModeChange) && IsInvalid(elevatorId)) massage = "Value IsNull";
+        
 
             return massage;
         }

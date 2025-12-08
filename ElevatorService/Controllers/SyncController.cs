@@ -21,7 +21,7 @@ namespace ElevatorService.Controllers
         public async Task<IActionResult> RunSync()
         {
             await _main.ReloadAndRestartAsync();
-            return Ok(new { message = "Data reload scheduler restart complete" });
+            return Ok(new { message = "Data reload ElevatorService restart complete" });
         }
 
         // GET api/<SyncController>/5

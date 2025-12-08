@@ -1,11 +1,9 @@
-﻿using Common.DTOs.Rests.Maps;
-using Common.Models;
+﻿using Common.Models;
 using Data.Interfaces;
 using Data.Repositorys;
 using ElevatorService.Mappings.Interfaces;
 using log4net;
 using RestApi.Interfases;
-using System.Data;
 using System.Diagnostics;
 
 namespace ElevatorService.Services
@@ -129,6 +127,7 @@ namespace ElevatorService.Services
                                 foreach (var Elevator in Elevators)
                                 {
                                     var elevatorSetting = _mapping.ElevatorSettings.Reponse(Elevator);
+
                                     _repository.ElevatorSettings.Add(elevatorSetting);
                                 }
                                 Resource = true;

@@ -15,7 +15,7 @@ namespace ElevatorService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class deviceController : ControllerBase
+    public class elevatorsController : ControllerBase
     {
         private static readonly ILog logger = LogManager.GetLogger("MissionController"); //Function 실행관련 Log
 
@@ -23,7 +23,7 @@ namespace ElevatorService.Controllers
         private readonly IUnitOfWorkMapping _mapping;
         private readonly IUnitofWorkMqttQueue _mqttQueue;
 
-        public deviceController(IUnitOfWorkRepository repository, IUnitOfWorkMapping mapping, IUnitofWorkMqttQueue mqttQueue)
+        public elevatorsController(IUnitOfWorkRepository repository, IUnitOfWorkMapping mapping, IUnitofWorkMqttQueue mqttQueue)
         {
             _repository = repository;
             _mapping = mapping;
@@ -59,18 +59,19 @@ namespace ElevatorService.Controllers
         //}
 
         [HttpPatch("{id}")]
-        public ActionResult Patch(string id, Patch_DeviceDto value)
+        public ActionResult Patch(string id, Patch_ElevatorDto value)
         {
             Command command = null;
             if (value != null)
             {
-                if (!IsInvalid(value.deviceMode))
+                if (!IsInvalid(value.ElevatorMode))
                 {
                     var GetById = _repository.Elevators.GetById(id);
                     if (GetById != null)
                     {
-                        string devicemode = value.deviceMode.ToUpper();
+                        string devicemode = value.ElevatorMode.ToUpper();
                         command = createModeChangeCommand(id, devicemode);
+                        _repository.Commands.Add(command);
                     }
                 }
             }
