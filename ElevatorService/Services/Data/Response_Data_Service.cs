@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace ElevatorService.Services
 {
-    public class GetDataService
+    public class Response_Data_Service
     {
         private static readonly ILog ApiLogger = LogManager.GetLogger("ApiEvent");
 
@@ -19,7 +19,7 @@ namespace ElevatorService.Services
         public readonly ILog _eventlog;
         public List<MqttTopicSubscribe> mqttTopicSubscribes = new List<MqttTopicSubscribe>();
 
-        public GetDataService(ILog eventLog, IUnitOfWorkRepository repository, IUnitOfWorkMapping mapping)
+        public Response_Data_Service(ILog eventLog, IUnitOfWorkRepository repository, IUnitOfWorkMapping mapping)
         {
             _repository = repository;
             _mapping = mapping;

@@ -20,7 +20,7 @@ namespace ElevatorService.Services
         public readonly IMqttWorker _mqtt;
 
         private MainService main = null;
-        private GetDataService getData = null;
+        private Response_Data_Service Response_Data = null;
         private MQTTService mQTT = null;
         private ElevatorService elevatorService = null;
 
@@ -39,14 +39,14 @@ namespace ElevatorService.Services
         {
             elevatorService = new ElevatorService(main, _repository, _mapping, _mqttQueue);
             mQTT = new MQTTService(_mqtt, _mqttQueue);
-            getData = new GetDataService(EventLogger, _repository, _mapping);
+            Response_Data = new Response_Data_Service(EventLogger, _repository, _mapping);
         }
 
         private async Task stratAsync()
         {
             Start();
-            bool getdataComplete = await getData.StartAsyc();
-            if (getdataComplete)
+            bool Response_Data_Complete = await Response_Data.StartAsyc();
+            if (Response_Data_Complete)
             {
                 mQTT.Start();
                 elevatorService.Start();
@@ -61,7 +61,7 @@ namespace ElevatorService.Services
             // 1. 스케줄러 정지 (Task 종료될 때까지 대기)
             await elevatorService.StopAsync();
             // StopAsync 내부에서 while 루프 빠져나오고 Task.WhenAll() 대기하도록 구현
-            bool getdataComplete = await getData.StartAsyc();
+            bool getdataComplete = await Response_Data.StartAsyc();
             if (getdataComplete)
             {
                 //// 3. MQTT 다시 시작 (필요시)

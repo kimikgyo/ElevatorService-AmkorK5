@@ -1,5 +1,4 @@
-﻿using Common.DTOs;
-using Common.DTOs.Rests.Missions;
+﻿using Common.DTOs.Rests.Missions;
 using Common.Models;
 using Data.Interfaces;
 using ElevatorService.Mappings.Interfaces;
@@ -7,7 +6,6 @@ using ElevatorService.MQTTs.Interfaces;
 using log4net;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using System.Reflection;
 using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -126,32 +124,35 @@ namespace ElevatorService.Controllers
         {
             Command command = null;
             Mission mission = null;
-            var condition = ConditionAddMission(addRequestDtoMission);
-            if (condition.elevatorId != null && condition.massage == null)
+            var massage = ConditionAddMission(addRequestDtoMission);
+            if (massage == null)
             {
                 var sourceFloor = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "SOURCEFLOOR").Select(s => s.value).FirstOrDefault();
                 var destinationFloor = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "DESTINATIONFLOOR").Select(s => s.value).FirstOrDefault();
                 var doorClose = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "ACTION").Select(s => s.value).FirstOrDefault();
                 var ModeChange = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "MODECHANGE").Select(s => s.value.ToUpper()).FirstOrDefault();
-
-                mission = _mapping.Missions.Post(addRequestDtoMission, condition.elevatorId, sourceFloor, destinationFloor, ModeChange);
-                if (mission != null)
+                var elevatorId = addRequestDtoMission.parameters.Where(k => k.key.ToUpper() == "LINkEDFACILITY").Select(s => s.value).FirstOrDefault();
+                if (elevatorId != null)
                 {
-                    if (sourceFloor != null)
+                    mission = _mapping.Missions.Post(addRequestDtoMission, elevatorId, sourceFloor, destinationFloor, ModeChange);
+                    if (mission != null)
                     {
-                        command = createSourceFloorCommand(mission);
-                    }
-                    else if (destinationFloor != null)
-                    {
-                        command = createDestinationFloorCommand(mission);
-                    }
-                    else if (doorClose != null)
-                    {
-                        command = createDoorClose(mission);
-                    }
-                    else if (ModeChange != null)
-                    {
-                        command = createModeChangeFloorCommand(mission);
+                        if (sourceFloor != null)
+                        {
+                            command = createSourceFloorCommand(mission);
+                        }
+                        else if (destinationFloor != null)
+                        {
+                            command = createDestinationFloorCommand(mission);
+                        }
+                        else if (doorClose != null)
+                        {
+                            command = createDoorClose(mission);
+                        }
+                        else if (ModeChange != null)
+                        {
+                            command = createModeChangeFloorCommand(mission);
+                        }
                     }
                 }
             }
@@ -165,7 +166,7 @@ namespace ElevatorService.Controllers
             }
             else
             {
-                return NotFound();
+                return NotFound(massage);
             }
         }
 
@@ -200,18 +201,26 @@ namespace ElevatorService.Controllers
                 || value.ToUpper() == "";
         }
 
-        private (string elevatorId, string massage) ConditionAddMission(Post_MissionDto RequestDto)
+        private string ConditionAddMission(Post_MissionDto post_Mission)
         {
             string massage = null;
-            string elevatorId = null;
-            string sourceFloor = null;
-            string destFloor = null;
-            var missionid = _repository.Missions.GetByAcsMissionId(RequestDto.guid);
+
+            var missionid = _repository.Missions.GetByAcsMissionId(post_Mission.guid);
             if (missionid != null) massage = "Check missionGuid";
 
-            elevatorId = RequestDto.parameters.Where(k => k.key.ToUpper() == "ELEVATORID").Select(s => s.value).FirstOrDefault();
+            var sourceFloor = post_Mission.parameters.Where(k => k.key.ToUpper() == "SOURCEFLOOR").Select(s => s.value).FirstOrDefault();
+            var destinationFloor = post_Mission.parameters.Where(k => k.key.ToUpper() == "DESTINATIONFLOOR").Select(s => s.value).FirstOrDefault();
+            var doorClose = post_Mission.parameters.Where(k => k.key.ToUpper() == "ACTION").Select(s => s.value).FirstOrDefault();
+            var ModeChange = post_Mission.parameters.Where(k => k.key.ToUpper() == "MODECHANGE").Select(s => s.value.ToUpper()).FirstOrDefault();
+            var elevatorId = post_Mission.parameters.Where(k => k.key.ToUpper() == "LINkEDFACILITY").Select(s => s.value).FirstOrDefault();
 
-            return (elevatorId, massage);
+            if (IsInvalid(sourceFloor)) massage = "SourceFloor Value IsNull";
+            else if (IsInvalid(destinationFloor)) massage = "destinationFloor Value IsNull";
+            else if (IsInvalid(doorClose)) massage = "doorClose Value IsNull";
+            else if (IsInvalid(ModeChange)) massage = "ModeChange Value IsNull";
+            else if (IsInvalid(elevatorId)) massage = "elevatorId Value IsNull";
+
+            return massage;
         }
 
         private Command createModeChangeFloorCommand(Mission mission)

@@ -25,7 +25,7 @@ namespace Data.Interfaces
         public string timeOut { get; set; } = "5000";
     }
 
-    public class ApResponseDto
+    public class ResponseDto
     {
         public int statusCode { get; set; }
         public string statusText { get; set; }

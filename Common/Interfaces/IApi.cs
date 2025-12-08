@@ -9,10 +9,10 @@ namespace Common.Models
 
         Task<List<Response_MapDto>> GetResourceMap();
 
-        Task<ApResponseDto> ElevatorPostCommandQueueAsync(object value);
+        Task<ResponseDto> ElevatorPostCommandQueueAsync(object value);
 
-        Task<ApResponseDto> ElevatorDeleteCommandQueueAsync(string id);
+        Task<ResponseDto> ElevatorDeleteCommandQueueAsync(string id);
 
-        Task<ApResponseDto> PositionPatchAsync(string id, object value);
+        Task<ResponseDto> PositionPatchAsync(string id, object value);
     }
 }
