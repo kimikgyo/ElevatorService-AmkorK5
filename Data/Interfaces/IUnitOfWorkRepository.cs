@@ -7,13 +7,11 @@ namespace Data.Interfaces
 {
     public interface IUnitOfWorkRepository : IDisposable
     {
-        #region Base
 
         MapRepository Maps { get; }
         PositionRepository Positions { get; }
-        DeviceRepository Devices { get; }
-
-        #endregion Base
+        ElevatorRepository Elevators { get; }
+        ElevatorSettingRepository ElevatorSettings { get; }
 
         CommandRepository Commands { get; }
         MissionRepository Missions { get; }

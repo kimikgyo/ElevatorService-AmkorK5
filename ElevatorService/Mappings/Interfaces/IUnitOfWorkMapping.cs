@@ -7,5 +7,6 @@
         MapMapping Maps { get; }
         ElevatorMapping Elevators { get; }
         CommandMapping Commands { get; }
+        ElevatorSettingMapping ElevatorSettings { get; }
     }
 }

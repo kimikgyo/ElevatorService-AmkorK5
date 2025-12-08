@@ -1,4 +1,5 @@
-﻿using Data.Repositorys;
+﻿using Common.Models;
+using Data.Repositorys;
 using Data.Repositorys.Historys;
 using Data.Repositorys.Maps;
 using Data.Repositorys.Positions;
@@ -18,13 +19,9 @@ namespace Data.Interfaces
 
         private static readonly string connectionString = ConnectionStrings.DB1;
 
-        #region Base
-
         public MapRepository Maps { get; private set; }
         public PositionRepository Positions { get; private set; }
-        public DeviceRepository Devices { get; private set; }
-
-        #endregion Base
+        public ElevatorRepository Elevators { get; private set; }
 
         public MissionRepository Missions { get; private set; }
         public CommandRepository Commands { get; private set; }
@@ -34,6 +31,7 @@ namespace Data.Interfaces
         public MissionFinishedHistoryRepository MissionFinishedHistorys { get; private set; }
 
         public ServiceApiRepository ServiceApis { get; private set; }
+        public ElevatorSettingRepository ElevatorSettings { get; private set; }
 
         public UnitOfWorkRepository()
         {
@@ -46,7 +44,8 @@ namespace Data.Interfaces
 
             Maps = new MapRepository(connectionString);
             Positions = new PositionRepository(connectionString);
-            Devices = new DeviceRepository(connectionString);
+            Elevators = new ElevatorRepository(connectionString);
+            ElevatorSettings = new ElevatorSettingRepository(connectionString);
 
             #endregion Base
 

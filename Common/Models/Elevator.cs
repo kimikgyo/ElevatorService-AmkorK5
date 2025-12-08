@@ -2,13 +2,13 @@
 
 namespace Common.Models
 {
-    public enum Elevator1_MODE
+    public enum Elevator_MODE
     {
         AGVMODE,
         NOTAGVMODE
     }
 
-    public enum Elevator1_State
+    public enum Elevator_State
     {
         DISCONNECT,
         CONNECT,
@@ -42,7 +42,7 @@ namespace Common.Models
         DOWNDRIVING_5F,
         DOWNDRIVING_6F
     }
-    public class Device
+    public class Elevator
     {
         [JsonPropertyOrder(1)] public string id { get; set; }
         [JsonPropertyOrder(2)] public string name { get; set; }

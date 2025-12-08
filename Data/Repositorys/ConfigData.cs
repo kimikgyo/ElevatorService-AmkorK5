@@ -11,10 +11,10 @@ namespace Data.Repositorys
         public static MQTTSetting mQTTSetting { get; set; }
 
         public static void Load(IConfiguration configuration)
-        {
+        {   
             ConfigData.ServiceApis = configuration.GetSection("ServiceApiInfo").Get<List<ServiceApi>>();
             ConfigData.mQTTSetting = configuration.GetSection("MQTTSetting").Get<MQTTSetting>();
-            ConfigData.SubscribeTopics = configuration.GetSection("MqttTopicSubscribe").Get<List<MqttTopicSubscribe>>();
+            //ConfigData.SubscribeTopics = configuration.GetSection("MqttTopicSubscribe").Get<List<MqttTopicSubscribe>>();
             ConfigData.PublishTopics = configuration.GetSection("MqttTopicPublish").Get<List<MqttTopicPublish>>();
         }
     }

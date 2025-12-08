@@ -33,13 +33,40 @@ namespace ElevatorService.Services
             bool Template = false;
 
             bool GetWorkerData = false;
-            bool ResourceData = false;
             while (!Complete)
             {
                 try
                 {
                     ApiClient();
-                    Complete = true;
+                    _repository.ElevatorSettings.Delete();
+                    foreach (var serviceApi in _repository.ServiceApis.GetAll())
+                    {
+                        if (serviceApi.type == "Resource")
+                        {
+                            var Elevators = await serviceApi.Api.Get_Elevators_Async();
+
+                            if (Elevators == null || Elevators.Count == 0)
+                            {
+                                _eventlog.Info($"{nameof(Elevators)}GetDataFail");
+                                break;
+                            }
+                            else
+                            {
+                                foreach (var Elevator in Elevators)
+                                {
+                                    var elevatorSetting = _mapping.ElevatorSettings.Reponse(Elevator);
+                                    _repository.ElevatorSettings.Add(elevatorSetting);
+                                }
+                                Resource = true;
+                            }
+                        }
+                    }
+                    if (Resource)
+                    {
+                        Complete = true;
+                        ConfigData.SubscribeTopics = suscreibeTopicsAdd();
+                        _eventlog.Info($"GetData{nameof(Complete)}");
+                    }
                     await Task.Delay(500);
                 }
                 catch (Exception ex)
@@ -50,6 +77,27 @@ namespace ElevatorService.Services
             }
 
             return Complete;
+        }
+
+        private List<MqttTopicSubscribe> suscreibeTopicsAdd()
+        {
+            mqttTopicSubscribes.Clear();
+            var elevatorSettings = _repository.ElevatorSettings.GetAll();
+            foreach (var elevatorSetting in elevatorSettings)
+            {
+                var statetopic = new MqttTopicSubscribe
+                {
+                    topic = $"acs/elevator/{elevatorSetting.id}/status"
+                };
+                var missiontopic = new MqttTopicSubscribe
+                {
+                    topic = $"acs/elevator/{elevatorSetting.id}/command"
+                };
+                mqttTopicSubscribes.Add(statetopic);
+                mqttTopicSubscribes.Add(missiontopic);
+            }
+
+            return mqttTopicSubscribes;
         }
 
         public async Task<bool> ReloadAsyc()
@@ -64,7 +112,36 @@ namespace ElevatorService.Services
             {
                 try
                 {
-                    ApiClient();
+                    _repository.ElevatorSettings.Delete();
+                    foreach (var serviceApi in _repository.ServiceApis.GetAll())
+                    {
+                        if (serviceApi.type == "Resource")
+                        {
+                            var Elevators = await serviceApi.Api.Get_Elevators_Async();
+
+                            if (Elevators == null || Elevators.Count == 0)
+                            {
+                                _eventlog.Info($"{nameof(Elevators)}GetDataFail");
+                                break;
+                            }
+                            else
+                            {
+                                foreach (var Elevator in Elevators)
+                                {
+                                    var elevatorSetting = _mapping.ElevatorSettings.Reponse(Elevator);
+                                    _repository.ElevatorSettings.Add(elevatorSetting);
+                                }
+                                Resource = true;
+                            }
+                        }
+                    }
+                    if (Resource)
+                    {
+                        Complete = true;
+                        ConfigData.SubscribeTopics.Clear();
+                        ConfigData.SubscribeTopics = suscreibeTopicsAdd();
+                        _eventlog.Info($"GetData{nameof(Complete)}");
+                    }
                     await Task.Delay(500);
                 }
                 catch (Exception ex)
@@ -76,100 +153,6 @@ namespace ElevatorService.Services
 
             return Complete;
         }
-
-        private void ReloadMap(List<Response_MapDto> dtoResourceMaps)
-        {
-            List<Map> Reload = new List<Map>();
-            //update Add
-            foreach (var dtoResourceMap in dtoResourceMaps)
-            {
-                Reload.Add(_mapping.Maps.Response(dtoResourceMap));
-            }
-
-            var ReloadId = Reload.Select(x => x.id).ToList();
-            var maps = _repository.Maps.GetAll();
-            var mapIds = maps.Select(x => x.id);
-
-            //새로운 데이터 기준 으로 기존데이터가 없는것
-            var AddMaps = Reload.Where(x => !ReloadId.Contains(x.id)).ToList();
-
-            foreach (var AddMap in AddMaps)
-            {
-                _repository.Maps.Add(AddMap);
-            }
-
-            //기존데이터 기준 새로운 데이터와 같은것 업데이트
-            foreach (var map in maps)
-            {
-                var reloadmap = Reload.FirstOrDefault(x => x.id == map.id);
-                if (reloadmap != null)
-                {
-                    map.mapId = reloadmap.mapId;
-                    map.source = reloadmap.source;
-                    map.level = reloadmap.level;
-                    map.name = reloadmap.name;
-                }
-            }
-
-            //기존데이터 기준 에서 새로운데이터가 없는것
-            var removedateMaps = maps.Where(x => !ReloadId.Contains(x.id)).ToList();
-            foreach (var removedateMap in removedateMaps)
-            {
-                _repository.Maps.Remove(removedateMap);
-            }
-        }
-
-        //private void ReloadPosition(List<Response_PositionDto> dtoResourcePositions)
-        //{
-        //    List<Position> Reload = new List<Position>();
-        //    //update Add
-        //    foreach (var dtoResourcePosition in dtoResourcePositions)
-        //    {
-        //        Reload.Add(_mapping.Positions.Response(dtoResourcePosition));
-        //    }
-
-        //    var ReloadId = Reload.Select(x => x.id);
-        //    var positions = _repository.Positions.GetAll();
-        //    var positionIds = positions.Select(x => x.id);
-
-        //    //새로운 데이터 기준 으로 기존데이터가 없는것
-        //    var AddPositions = Reload.Where(x => !positionIds.Contains(x.id)).ToList();
-
-        //    foreach (var AddPosition in AddPositions)
-        //    {
-        //        _repository.Positions.Add(AddPosition);
-        //    }
-
-        //    //기존데이터 기준 새로운 데이터와 같은것 업데이트
-        //    foreach (var position in positions)
-        //    {
-        //        var Update = Reload.FirstOrDefault(x => x.id == position.id);
-        //        if (Update != null)
-        //        {
-        //            position.source = Update.source;
-        //            position.group = Update.group;
-        //            position.type = Update.type;
-        //            position.subType = Update.subType;
-        //            position.mapId = Update.mapId;
-        //            position.name = Update.name;
-        //            position.x = Update.x;
-        //            position.y = Update.y;
-        //            position.theth = Update.theth;
-        //            position.isDisplayed = Update.isDisplayed;
-        //            position.isEnabled = Update.isEnabled;
-        //            position.linkedFacility = Update.linkedFacility;
-        //            position.linkedRobotId = Update.linkedRobotId;
-        //            position.hasCharger = Update.hasCharger;
-        //        }
-        //    }
-
-        //    //기존데이터 기준 에서 새로운데이터가 없는것
-        //    var removes = positions.Where(x => !ReloadId.Contains(x.id)).ToList();
-        //    foreach (var remove in removes)
-        //    {
-        //        _repository.Positions.Remove(remove);
-        //    }
-        //}
 
         private void ApiClient()
         {

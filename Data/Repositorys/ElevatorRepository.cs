@@ -4,14 +4,14 @@ using Microsoft.Data.SqlClient;
 
 namespace Data.Repositorys
 {
-    public class DeviceRepository
+    public class ElevatorRepository
     {
         private static readonly ILog logger = LogManager.GetLogger("Device"); //Function 실행관련 Log
         private readonly string connectionString;
-        private readonly List<Device> _devices = new List<Device>(); // cached data
+        private readonly List<Elevator> _devices = new List<Elevator>(); // cached data
         private readonly object _lock = new object();
 
-        public DeviceRepository(string connectionString)
+        public ElevatorRepository(string connectionString)
         {
             this.connectionString = connectionString;
             createTable();
@@ -75,7 +75,7 @@ namespace Data.Repositorys
             //}
         }
 
-        public void Add(Device add)
+        public void Add(Elevator add)
         {
             _devices.Add(add);
             logger.Info($"Add: {add}");
@@ -142,7 +142,7 @@ namespace Data.Repositorys
             //}
         }
 
-        public void Update(Device update)
+        public void Update(Elevator update)
         {
             logger.Info($"Update: {update}");
 
@@ -199,7 +199,7 @@ namespace Data.Repositorys
             //}
         }
 
-        public void Remove(Device remove)
+        public void Remove(Elevator remove)
         {
             _devices.Remove(remove);
             logger.Info($"Remove: {remove}");
@@ -217,7 +217,7 @@ namespace Data.Repositorys
             //}
         }
 
-        public List<Device> GetAll()
+        public List<Elevator> GetAll()
         {
             lock (_lock)
             {
@@ -225,7 +225,7 @@ namespace Data.Repositorys
             }
         }
 
-        public Device GetById(string id)
+        public Elevator GetById(string id)
         {
             lock (_lock)
             {

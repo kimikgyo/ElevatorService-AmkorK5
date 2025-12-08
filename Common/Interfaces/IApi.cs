@@ -1,4 +1,5 @@
-﻿using Common.DTOs.Rests.Maps;
+﻿using Common.DTOs.Rests.ElevatorSetting;
+using Common.DTOs.Rests.Maps;
 using Data.Interfaces;
 
 namespace Common.Models
@@ -7,7 +8,7 @@ namespace Common.Models
     {
         Uri BaseAddress { get; }
 
-        Task<List<Response_MapDto>> GetResourceMap();
+        Task<List<Response_Elevator_SettingDto>> Get_Elevators_Async();
 
         Task<ResponseDto> ElevatorPostCommandQueueAsync(object value);
 

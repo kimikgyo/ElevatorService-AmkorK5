@@ -32,7 +32,7 @@ namespace ElevatorService.MQTTs
                 {
                     //Console.WriteLine(string.Format("Process Message: [{0}] {1} at {2:yyyy-MM-dd HH:mm:ss,fff}", subscribe.topic, subscribe.Payload, subscribe.Timestamp));
 
-                    var elevator = _repository.Devices.GetById(subscribe.id);
+                    var elevator = _repository.Elevators.GetById(subscribe.id);
                     switch (subscribe.subType)
                     {
                         case nameof(TopicSubType.status):
@@ -40,12 +40,12 @@ namespace ElevatorService.MQTTs
                             if (elevator == null)
                             {
                                 var create = _mapping.Elevators.Subscribe_Create(status);
-                                _repository.Devices.Add(create);
+                                _repository.Elevators.Add(create);
                             }
                             else
                             {
                                 _mapping.Elevators.Subscribe_Update_State(elevator, status);
-                                _repository.Devices.Update(elevator);
+                                _repository.Elevators.Update(elevator);
                             }
 
                             break;

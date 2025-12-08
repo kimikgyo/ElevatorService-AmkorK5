@@ -6,6 +6,7 @@
         public PositionMapping Positions { get; private set; }
         public MapMapping Maps { get; private set; }
         public ElevatorMapping Elevators { get; private set; }
+        public ElevatorSettingMapping ElevatorSettings { get; private set; }
         public CommandMapping Commands { get; private set; }
 
         public UnitOfWorkMapping()
@@ -19,6 +20,7 @@
             Positions = new PositionMapping();
             Maps = new MapMapping();
             Elevators = new ElevatorMapping();
+            ElevatorSettings = new ElevatorSettingMapping();
             Commands = new CommandMapping();
         }
 

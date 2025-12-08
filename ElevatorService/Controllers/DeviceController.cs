@@ -32,9 +32,9 @@ namespace ElevatorService.Controllers
 
         // GET: api/<ValuesController>
         [HttpGet]
-        public ActionResult<List<Device>> Get()
+        public ActionResult<List<Elevator>> Get()
         {
-            var getAll = _repository.Devices.GetAll();
+            var getAll = _repository.Elevators.GetAll();
 
             return getAll;
         }
@@ -66,7 +66,7 @@ namespace ElevatorService.Controllers
             {
                 if (!IsInvalid(value.deviceMode))
                 {
-                    var GetById = _repository.Devices.GetById(id);
+                    var GetById = _repository.Elevators.GetById(id);
                     if (GetById != null)
                     {
                         string devicemode = value.deviceMode.ToUpper();

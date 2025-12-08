@@ -37,7 +37,7 @@ namespace ElevatorService.Services
             var runmissions = missions.Where(m => m.state == nameof(MissionState.EXECUTING)).ToList();
             if (runmissions.Count >= 2) return;
 
-            var elevator = _repository.Devices.GetAll().FirstOrDefault(r => r.state != nameof(Elevator1_State.DISCONNECT));
+            var elevator = _repository.Elevators.GetAll().FirstOrDefault(r => r.state != nameof(Elevator_State.DISCONNECT));
             if (elevator == null) return;
 
             var pandingMissions = missions.Where(r => r.state == nameof(MissionState.PENDING)).OrderBy(r => r.createdAt).ToList();
@@ -94,48 +94,48 @@ namespace ElevatorService.Services
             }
         }
 
-        private Mission missionSelect(Device elevator, List<Mission> missions)
+        private Mission missionSelect(Elevator elevator, List<Mission> missions)
         {
             Mission mission = null;
 
             switch (elevator.state)
             {
-                case nameof(Elevator1_State.DOOROPEN_B1F):
-                case nameof(Elevator1_State.DOORCLOSE_B1F):
+                case nameof(Elevator_State.DOOROPEN_B1F):
+                case nameof(Elevator_State.DOORCLOSE_B1F):
                     mission = missions.FirstOrDefault(m => m.sourceFloor == "B1F");
                     break;
 
-                case nameof(Elevator1_State.DOOROPEN_1F):
-                case nameof(Elevator1_State.DOORCLOSE_1F):
+                case nameof(Elevator_State.DOOROPEN_1F):
+                case nameof(Elevator_State.DOORCLOSE_1F):
                     mission = missions.FirstOrDefault(m => m.sourceFloor == "1F");
                     break;
 
-                case nameof(Elevator1_State.DOOROPEN_2F):
-                case nameof(Elevator1_State.DOORCLOSE_2F):
+                case nameof(Elevator_State.DOOROPEN_2F):
+                case nameof(Elevator_State.DOORCLOSE_2F):
                     mission = missions.FirstOrDefault(m => m.sourceFloor == "2F");
                     break;
 
-                case nameof(Elevator1_State.DOOROPEN_3F):
-                case nameof(Elevator1_State.DOORCLOSE_3F):
+                case nameof(Elevator_State.DOOROPEN_3F):
+                case nameof(Elevator_State.DOORCLOSE_3F):
                     mission = missions.FirstOrDefault(m => m.sourceFloor == "3F");
                     break;
 
-                case nameof(Elevator1_State.DOOROPEN_4F):
-                case nameof(Elevator1_State.DOORCLOSE_4F):
+                case nameof(Elevator_State.DOOROPEN_4F):
+                case nameof(Elevator_State.DOORCLOSE_4F):
                     mission = missions.FirstOrDefault(m => m.sourceFloor == "4F");
                     break;
 
-                case nameof(Elevator1_State.DOOROPEN_5F):
-                case nameof(Elevator1_State.DOORCLOSE_5F):
+                case nameof(Elevator_State.DOOROPEN_5F):
+                case nameof(Elevator_State.DOORCLOSE_5F):
                     mission = missions.FirstOrDefault(m => m.sourceFloor == "5F");
                     break;
 
-                case nameof(Elevator1_State.DOOROPEN_6F):
-                case nameof(Elevator1_State.DOORCLOSE_6F):
+                case nameof(Elevator_State.DOOROPEN_6F):
+                case nameof(Elevator_State.DOORCLOSE_6F):
                     mission = missions.FirstOrDefault(m => m.sourceFloor == "6F");
                     break;
 
-                case nameof(Elevator1_State.UPDRIVING_B1F):
+                case nameof(Elevator_State.UPDRIVING_B1F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "1F")
                                                         || (m.sourceFloor == "2F")
                                                         || (m.sourceFloor == "3F")
@@ -144,7 +144,7 @@ namespace ElevatorService.Services
                                                         || (m.sourceFloor == "6F"));
                     break;
 
-                case nameof(Elevator1_State.UPDRIVING_1F):
+                case nameof(Elevator_State.UPDRIVING_1F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "2F")
                                                         || (m.sourceFloor == "3F")
                                                         || (m.sourceFloor == "4F")
@@ -152,57 +152,57 @@ namespace ElevatorService.Services
                                                         || (m.sourceFloor == "6F"));
                     break;
 
-                case nameof(Elevator1_State.UPDRIVING_2F):
+                case nameof(Elevator_State.UPDRIVING_2F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "3F")
                                                      || (m.sourceFloor == "4F")
                                                      || (m.sourceFloor == "5F")
                                                      || (m.sourceFloor == "6F"));
                     break;
 
-                case nameof(Elevator1_State.UPDRIVING_3F):
+                case nameof(Elevator_State.UPDRIVING_3F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "4F")
                                                    || (m.sourceFloor == "5F")
                                                    || (m.sourceFloor == "6F"));
                     break;
 
-                case nameof(Elevator1_State.UPDRIVING_4F):
+                case nameof(Elevator_State.UPDRIVING_4F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "5F")
                                                         || (m.sourceFloor == "6F"));
                     break;
 
-                case nameof(Elevator1_State.UPDRIVING_5F):
-                case nameof(Elevator1_State.UPDRIVING_6F):
+                case nameof(Elevator_State.UPDRIVING_5F):
+                case nameof(Elevator_State.UPDRIVING_6F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "6F"));
                     break;
 
-                case nameof(Elevator1_State.DOWNDRIVING_B1F):
-                case nameof(Elevator1_State.DOWNDRIVING_1F):
+                case nameof(Elevator_State.DOWNDRIVING_B1F):
+                case nameof(Elevator_State.DOWNDRIVING_1F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "B1F"));
                     break;
 
-                case nameof(Elevator1_State.DOWNDRIVING_2F):
+                case nameof(Elevator_State.DOWNDRIVING_2F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "1F"));
                     break;
 
-                case nameof(Elevator1_State.DOWNDRIVING_3F):
+                case nameof(Elevator_State.DOWNDRIVING_3F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "1F")
                                                  || (m.sourceFloor == "2F"));
                     break;
 
-                case nameof(Elevator1_State.DOWNDRIVING_4F):
+                case nameof(Elevator_State.DOWNDRIVING_4F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "1F")
                                                  || (m.sourceFloor == "2F")
                                                  || (m.sourceFloor == "3F"));
                     break;
 
-                case nameof(Elevator1_State.DOWNDRIVING_5F):
+                case nameof(Elevator_State.DOWNDRIVING_5F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "1F")
                                                  || (m.sourceFloor == "2F")
                                                  || (m.sourceFloor == "3F")
                                                  || (m.sourceFloor == "4F"));
                     break;
 
-                case nameof(Elevator1_State.DOWNDRIVING_6F):
+                case nameof(Elevator_State.DOWNDRIVING_6F):
                     mission = missions.FirstOrDefault(m => (m.sourceFloor == "1F")
                                                  || (m.sourceFloor == "2F")
                                                  || (m.sourceFloor == "3F")
